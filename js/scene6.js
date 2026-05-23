@@ -120,8 +120,8 @@ function handleLeftPath() {
     gyroActive = false;
     window.removeEventListener('deviceorientation', handleOrientation);
 
-    // 延迟后进入破晓流程
-    setTimeout(() => startDawnAnimation(), 1200);
+    // 延迟后进入亮度渐亮流程
+    setTimeout(() => startBrightnessAnimation(), 1200);
 }
 
 // 处理右侧错误道路
@@ -194,8 +194,8 @@ function showGyroError(message) {
     document.getElementById('gyro-status').classList.add('error');
 }
 
-// 破晓动画序列 - 自动播放6-4.png和6-5.png
-function startDawnAnimation() {
+// 亮度渐亮动画 - 画面逐渐亮度提高
+function startBrightnessAnimation() {
     // 隐藏状态提示
     document.getElementById('gyro-status').classList.remove('show');
     hideLockHint();
@@ -210,7 +210,7 @@ function startDawnAnimation() {
         document.getElementById('bg-6-seq2').style.opacity = '1';
     }, 1500);
 
-    // 夜色蒙版逐层渐隐
+    // 夜色蒙版逐层渐隐 - 画面亮度逐渐提高
     setTimeout(() => {
         document.getElementById('night-mask-layer1').classList.add('fade-out');
     }, 800);
@@ -224,55 +224,8 @@ function startDawnAnimation() {
         document.getElementById('fog-center').style.opacity = '0';
     }, 1100);
 
-    // 天边亮起晨光
-    setTimeout(() => {
-        document.getElementById('dawn-sky').classList.add('fade-in');
-        // 晨曦光线依次显示
-        document.querySelectorAll('.dawn-ray').forEach((ray, index) => {
-            setTimeout(() => ray.classList.add('show'), index * 150);
-        });
-    }, 1700);
-
-    // 播放破晓音效
-    setTimeout(() => playDawnSound(), 1000);
-
     // 显示台词弹窗
-    setTimeout(() => showDialogue6(), 4000);
-}
-
-// 播放破晓音效
-function playDawnSound() {
-    try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-        // 主音 - 温暖渐强
-        const osc1 = audioCtx.createOscillator();
-        const gain1 = audioCtx.createGain();
-        osc1.type = 'sine';
-        osc1.connect(gain1);
-        gain1.connect(audioCtx.destination);
-        osc1.frequency.setValueAtTime(440, audioCtx.currentTime);
-        osc1.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 2);
-        gain1.gain.setValueAtTime(0, audioCtx.currentTime);
-        gain1.gain.linearRampToValueAtTime(0.12, audioCtx.currentTime + 1.5);
-        gain1.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 3.5);
-        osc1.start(audioCtx.currentTime);
-        osc1.stop(audioCtx.currentTime + 3.5);
-
-        // 泛音 - 空灵感
-        const osc2 = audioCtx.createOscillator();
-        const gain2 = audioCtx.createGain();
-        osc2.type = 'sine';
-        osc2.connect(gain2);
-        gain2.connect(audioCtx.destination);
-        osc2.frequency.setValueAtTime(660, audioCtx.currentTime + 0.5);
-        osc2.frequency.exponentialRampToValueAtTime(1320, audioCtx.currentTime + 2.5);
-        gain2.gain.setValueAtTime(0, audioCtx.currentTime + 0.5);
-        gain2.gain.linearRampToValueAtTime(0.06, audioCtx.currentTime + 2);
-        gain2.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 4);
-        osc2.start(audioCtx.currentTime + 0.5);
-        osc2.stop(audioCtx.currentTime + 4);
-    } catch (e) {}
+    setTimeout(() => showDialogue6(), 3500);
 }
 
 // 显示台词弹窗

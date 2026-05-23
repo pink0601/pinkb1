@@ -1,0 +1,46 @@
+#scene5 { background: #060610; }
+
+#bg-layer-5 {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: url("../assets/images/5.png") center center / cover no-repeat;
+    z-index: 1; transition: opacity 2s ease;
+}
+
+#bg-layer-5-after {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: url("../assets/images/6.png") center center / cover no-repeat;
+    z-index: 2; opacity: 0; transition: opacity 2s ease;
+}
+
+.dialogue-bubble {
+    position: absolute; bottom: 26%;
+    background: rgba(15, 18, 28, 0.92);
+    border: 1px solid rgba(140, 130, 110, 0.25);
+    border-radius: 14px; padding: 14px 18px;
+    max-width: 75%; width: 75%; z-index: 30;
+    opacity: 0; pointer-events: none; transform: scale(0);
+    backdrop-filter: blur(4px);
+}
+
+.dialogue-bubble.right { right: 5%; left: auto; transform-origin: right center; }
+.dialogue-bubble.right.show { animation: bubblePopRight 0.5s ease forwards; }
+.dialogue-bubble.right.hide { animation: bubbleFadeRight 0.4s ease forwards; }
+
+.dialogue-bubble.left { left: 5%; right: auto; transform-origin: left center; }
+.dialogue-bubble.left.show { animation: bubblePopLeft 0.5s ease forwards; }
+.dialogue-bubble.left.hide { animation: bubbleFadeLeft 0.4s ease forwards; }
+
+@keyframes bubblePopRight { 0% { opacity: 0; transform: scale(0.85); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes bubbleFadeRight { 0% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(0.9); } }
+@keyframes bubblePopLeft { 0% { opacity: 0; transform: scale(0.85); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes bubbleFadeLeft { 0% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(0.9); } }
+
+.bubble-text { color: rgba(240, 235, 220, 0.95); font-size: 15px; line-height: 1.7; }
+
+#click-hint-5 {
+    position: absolute; bottom: 14%; left: 50%; transform: translateX(-50%);
+    color: rgba(200, 195, 180, 0.4); font-size: 13px; z-index: 35;
+    white-space: nowrap; opacity: 0; pointer-events: none;
+}
+#click-hint-5.show { opacity: 1; animation: breatheHint 2.5s ease-in-out infinite; }
+@keyframes breatheHint { 0%, 100% { opacity: 0.25; } 50% { opacity: 0.5; } }

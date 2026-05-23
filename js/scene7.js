@@ -22,14 +22,12 @@ function handleClick7(e) {
     if (clickPhase7 === 1) {
         // 第一次点击：7-1 → 7-2
         document.getElementById('click-hint-7').textContent = '再次点击，传递灯火';
-        playHeritageSound();
         setTimeout(() => {
             document.getElementById('bg-7-2').style.opacity = '1';
         }, 300);
     } else if (clickPhase7 === 2) {
         // 第二次点击：7-2 → 7-3
         document.getElementById('click-hint-7').textContent = '最后一次，点亮万家灯火';
-        playHeritageSound();
         setTimeout(() => {
             document.getElementById('bg-7-2').style.opacity = '0';
             document.getElementById('bg-7-3').style.opacity = '1';
@@ -39,7 +37,6 @@ function handleClick7(e) {
         document.getElementById('click-hint-7').classList.remove('show');
         document.getElementById('click-hint-7').style.display = 'none';
         document.getElementById('click-area-7').style.pointerEvents = 'none';
-        playHeritageSound();
         setTimeout(() => showDialogue7(), 1000);
     }
 }
@@ -50,24 +47,4 @@ function showDialogue7() {
     setTimeout(() => {
         switchToScene(8);
     }, 3000);
-}
-
-function playHeritageSound() {
-    try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const frequencies = [523.25, 659.25, 783.99, 1046.50];
-        frequencies.forEach((freq, index) => {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(freq, audioCtx.currentTime + index * 0.1);
-            gain.gain.setValueAtTime(0, audioCtx.currentTime + index * 0.1);
-            gain.gain.linearRampToValueAtTime(0.08, audioCtx.currentTime + index * 0.1 + 0.5);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + index * 0.1 + 3);
-            osc.start(audioCtx.currentTime + index * 0.1);
-            osc.stop(audioCtx.currentTime + index * 0.1 + 3);
-        });
-    } catch (e) {}
 }

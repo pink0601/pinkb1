@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>一盏马灯照亮长征路</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/scene1.css">
+    <link rel="stylesheet" href="css/scene2.css">
+    <link rel="stylesheet" href="css/scene3.css">
+    <link rel="stylesheet" href="css/scene4.css">
+    <link rel="stylesheet" href="css/scene5.css">
+    <link rel="stylesheet" href="css/scene6.css">
+    <link rel="stylesheet" href="css/scene7.css">
+    <link rel="stylesheet" href="css/scene8.css">
+</head>
+<body>
+    <div class="texture-overlay"></div>
+    
+    <!-- 第一幕：封面 -->
+    <div id="scene1" class="scene">
+        <div class="text-content">
+            <h1 class="main-title">一盏马灯照亮长征路</h1>
+            <p class="sub-title">以微光赴长路，以坚守赴初心</p>
+        </div>
+        <div id="hit-area">
+            <div class="lantern-core"></div>
+            <div class="glow-effect"></div>
+        </div>
+        <div class="bottom-area">
+            <p class="hint-text">点亮马灯，解锁一段温暖又滚烫的长征往事</p>
+            <div id="progress-container">
+                <div id="progress-bar"></div>
+            </div>
+        </div>
+        <div class="swipe-hint" id="swipe-1">👆 上滑继续</div>
+    </div>
+    
+    <!-- 第二幕：绝境征途 -->
+    <div id="scene2" class="scene">
+        <div id="dark-overlay"></div>
+        <div id="bg-image-container"></div>
+        <canvas id="fog-canvas"></canvas>
+        <canvas id="water-drops"></canvas>
+        
+        <div id="text-content">
+            <p class="text-line" data-delay="0">八十多年前，我行走在长征路上。</p>
+            <p class="text-line" data-delay="800">脚下没有平坦大道，眼前没有明亮灯火，只有无边黑夜、刺骨寒风，还有藏在暗处的沼泽与泥泞。</p>
+            <p class="text-line" data-delay="1600">黑夜于我而言，不只是漆黑，更是步步未知的生死考验。</p>
+            <p class="text-line" data-delay="2400">我不是什么传奇英雄，只是心怀信仰的普通年轻战士，</p>
+            <p class="text-line" data-delay="3200">而照亮我和同伴前路的，只有手里这盏锈迹斑斑的小小马灯。</p>
+        </div>
+        
+        <div id="guide-text">👆 轻扫拨开浓雾，探寻未知前路</div>
+        
+        <div id="dialogue-box">
+            <div>草地处处藏险，多探明一寸前路，队伍便多一分平安。</div>
+        </div>
+        
+        <div id="fog-progress"><div id="fog-progress-bar"></div></div>
+        <div id="clear-percent">已探明: 0%</div>
+        <div class="swipe-hint" id="swipe-2">👆 上滑继续征途</div>
+    </div>
+    
+    <!-- 第三幕：风雨护灯 -->
+    <div id="scene3" class="scene">
+        <div id="bg-3-1" class="bg-image-scene3"></div>
+        <div id="bg-3-2" class="bg-image-scene3"></div>
+        <div id="rain-container"></div>
+        <div id="lantern-glow-3"></div>
+        
+        <div id="text-content-3">
+            <p class="content-text-3">
+                雨倾盆，泥水漫路，夜色漆黑无光。战友皆身心俱疲，我俯身紧护马灯。油灯老旧、煤油稀缺，一旦灯火熄灭，队伍便会困于暗夜泥泞。寒风刺骨，身心承压，唯有守住微光，方能继续前行。
+            </p>
+        </div>
+        
+        <div id="dialogue-quote-3">
+            <p class="quote-text-3">风再大、雨再冷，只要马灯不灭，我们的心就不能乱、脚步就不能停。</p>
+        </div>
+        
+        <div id="hint-text-3">放平手机，稳住飘摇灯火</div>
+        <div class="swipe-hint" id="swipe-3">👆 上滑翻页</div>
+    </div>
+    
+    <!-- 第四幕：托举马灯 -->
+    <div id="scene4" class="scene">
+        <div id="bg-container-4">
+            <div id="bg-4-1" class="bg-image-4"></div>
+            <div id="bg-4-2" class="bg-image-4"></div>
+            <div id="bg-4-3" class="bg-image-4"></div>
+            <div id="bg-4-4" class="bg-image-4"></div>
+        </div>
+
+        <!-- 残余细雨层 - 承接第三幕 -->
+        <div id="rain-container-4"></div>
+
+        <!-- 马灯拖拽区域 -->
+        <div id="lantern-drag-area">
+            <div id="lantern-4">
+                <div class="lantern-core-4"></div>
+            </div>
+        </div>
+
+        <!-- 竖向进度条 -->
+        <div id="progress-container-4">
+            <div id="progress-fill-4"></div>
+        </div>
+
+        <div id="guide-text-4">向上拖动马灯，奋力托举微光</div>
+
+        <div id="dialogue-box-4">
+            <div>守住灯火，便是守住前行的希望。</div>
+        </div>
+        <div class="swipe-hint" id="swipe-4">👆 上滑继续</div>
+    </div>
+    
+    <!-- 第五幕：对话场景 -->
+    <div id="scene5" class="scene">
+        <div id="bg-layer-5"></div>
+        <div id="bg-layer-5-after"></div>
+        <div id="click-hint-5">点击继续对话</div>
+        
+        <div id="dialogue-area-1" class="dialogue-bubble right">
+            <div class="bubble-text">"我实在走不动了，你们别管我，先走吧……"</div>
+        </div>
+        <div id="dialogue-area-1b" class="dialogue-bubble left">
+            <div class="bubble-text">"别瞎说，我们是战友，哪能丢下你！"</div>
+        </div>
+        <div id="dialogue-area-2" class="dialogue-bubble right">
+            <div class="bubble-text">"我这身子，怕是撑不到天亮了……"</div>
+        </div>
+        <div id="dialogue-area-2b" class="dialogue-bubble left">
+            <div class="bubble-text">"有我在，灯还亮着，咱们一起走，绝不落下你！"</div>
+        </div>
+        <div class="swipe-hint" id="swipe-5">👆 上滑继续</div>
+    </div>
+    
+    <!-- 第六幕：陀螺仪寻路 -->
+    <div id="scene6" class="scene">
+        <!-- 左右岔路背景层 -->
+        <!-- 向左倾斜显示 6-3.png -->
+        <div id="bg-6-left" class="bg-image-6"></div>
+        <!-- 向右倾斜显示 6-2.png -->
+        <div id="bg-6-right" class="bg-image-6"></div>
+        <!-- 路线确认后自动播放 6-4.png 和 6-5.png -->
+        <div id="bg-6-seq1" class="bg-image-6"></div>
+        <div id="bg-6-seq2" class="bg-image-6"></div>
+
+        <!-- 多层迷雾遮罩 - 左右不同浓度 -->
+        <div id="fog-left"></div>
+        <div id="fog-right"></div>
+        <div id="fog-center"></div>
+
+        <!-- 夜色蒙版 - 多层渐变 -->
+        <div id="night-mask-layer1"></div>
+        <div id="night-mask-layer2"></div>
+
+        <!-- 破晓晨光 -->
+        <div id="dawn-sky"></div>
+        <div class="dawn-ray" style="left: 20%;"></div>
+        <div class="dawn-ray" style="left: 35%;"></div>
+        <div class="dawn-ray" style="left: 50%;"></div>
+        <div class="dawn-ray" style="left: 65%;"></div>
+        <div class="dawn-ray" style="left: 80%;"></div>
+
+        <!-- 方向指示器 -->
+        <div id="direction-indicator">
+            <div class="direction-arrow">←</div>
+            <div class="direction-text">向左探寻</div>
+        </div>
+
+        <!-- 状态提示 -->
+        <div id="gyro-status">
+            <div class="status-text">左右倾斜手机探寻前路</div>
+        </div>
+
+        <!-- 引导提示 -->
+        <div id="gyro-guide">
+            <div class="guide-icon">📱</div>
+            <div class="guide-hint">左右倾斜手机寻找正确道路</div>
+        </div>
+
+        <!-- 台词弹窗 -->
+        <div id="dialogue-box-6">
+            <div class="dialogue-text-6">一步一痕踏泥泞，终见微光破长夜。</div>
+        </div>
+        <div class="swipe-hint" id="swipe-6">👆 上滑继续</div>
+    </div>
+    
+    <!-- 第七幕：灯火相传 -->
+    <div id="scene7" class="scene">
+        <div id="bg-7-1" class="bg-image-7"></div>
+        <div id="bg-7-2" class="bg-image-7"></div>
+        <div id="bg-7-3" class="bg-image-7"></div>
+        <div id="lantern-glow-7"></div>
+        <div id="click-area-7"></div>
+        <div id="click-hint-7">点击屏幕，点燃传承之火</div>
+        
+        <div id="dialogue-box-7">
+            <div class="dialogue-text-7">一盏马灯，照亮了来时的路；<br>万千灯火，正照亮我们前行的方向。</div>
+        </div>
+    </div>
+    
+    <!-- 第八幕：马灯人设盲盒 -->
+    <div id="scene8" class="scene">
+        <div class="bg-image-8"></div>
+        <div class="bg-overlay-8"></div>
+        
+        <div class="glass-modal active" id="introModal">
+            <div class="glass-content">
+                <div class="intro-icon">
+                    <img src="assets/images/8-11.png" alt="马灯">
+                </div>
+                <div class="glass-title">马灯人设解锁</div>
+                <div class="glass-divider"></div>
+                <div class="glass-desc">
+                    穿越百年时光，寻找你的长征精神化身<br>
+                    每一盏马灯，都照亮一种独特的人格光芒
+                </div>
+                <button class="blindbox-btn" onclick="openBlindbox()">
+                    开启我的马灯人设盲盒
+                </button>
+            </div>
+        </div>
+        
+        <div class="loading-overlay-8" id="loadingOverlay">
+            <div class="loading-sketch">
+                <img src="assets/images/2.png" alt="马灯">
+            </div>
+            <div class="loading-text">正在寻找你的精神化身...</div>
+        </div>
+        
+        <div class="result-modal" id="resultModal">
+            <button class="close-result" onclick="closeResult()">×</button>
+            <div class="result-content">
+                <div class="character-avatar" id="characterAvatar"><img src="" alt="人设"></div>
+                <div class="poster-card" id="posterCard">
+                    <div class="poster-header">
+                        <div class="poster-title">我的马灯人设</div>
+                    </div>
+                    <div class="poster-body">
+                        <div class="character-name" id="characterName">-</div>
+                        <div class="character-slogan" id="characterSlogan">-</div>
+                    </div>
+                    <div class="poster-footer">
+                        <button class="action-btn save-btn" onclick="savePoster()">保存海报</button>
+                        <button class="action-btn share-btn" onclick="sharePoster()">分享好友</button>
+                    </div>
+                    <div style="padding: 12px 24px 20px; background: rgba(0,0,0,0.3); border-top: 1px solid rgba(255,215,0,0.1);">
+                        <button class="action-btn" style="width:100%; background: transparent; color: rgba(255,215,0,0.7); border: 1px solid rgba(255,215,0,0.2); padding: 12px; font-size: 13px;" onclick="openMatch()">互换身份 · 组队匹配</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 互换身份/组队匹配弹窗 -->
+        <div class="match-modal" id="matchModal">
+            <button class="match-close" onclick="closeMatch()">×</button>
+            <div class="match-content">
+                <div class="match-title">互换身份 · 组队匹配</div>
+                <div class="match-subtitle">看看你和好友能组成怎样的长征搭档</div>
+                <div class="match-avatars">
+                    <div class="match-avatar-item">
+                        <img id="matchAvatarMe" src="" alt="我">
+                        <div class="match-avatar-label" id="matchNameMe">-</div>
+                    </div>
+                    <div class="match-vs">&</div>
+                    <div class="match-avatar-item">
+                        <img id="matchAvatarFriend" src="" alt="好友">
+                        <div class="match-avatar-label" id="matchNameFriend">-</div>
+                    </div>
+                </div>
+                <div class="match-result-text" id="matchResultText">-</div>
+                <div class="match-actions">
+                    <button class="match-btn match-reroll-btn" onclick="rerollMatch()">换一个队友</button>
+                    <button class="match-btn match-share-btn" onclick="shareMatch()">分享组队</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="poster-preview-modal" id="posterPreview">
+            <canvas id="posterCanvas" width="750" height="1334"></canvas>
+            <div class="poster-actions">
+                <button class="poster-action-btn poster-close-btn" onclick="closePosterPreview()">关闭</button>
+                <button class="poster-action-btn poster-download-btn" onclick="downloadPoster()">保存图片</button>
+            </div>
+        </div>
+        
+        <div class="toast-8" id="toast8"></div>
+    </div>
+
+    <script src="js/scene1.js"></script>
+    <script src="js/scene2.js"></script>
+    <script src="js/scene3.js"></script>
+    <script src="js/scene4.js"></script>
+    <script src="js/scene5.js"></script>
+    <script src="js/scene6.js"></script>
+    <script src="js/scene7.js"></script>
+    <script src="js/scene8.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

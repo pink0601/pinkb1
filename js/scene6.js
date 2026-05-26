@@ -120,8 +120,13 @@ function handleLeftPath() {
     gyroActive = false;
     window.removeEventListener('deviceorientation', handleOrientation);
 
+    // 6-3.png 显现后自动显现 6-4.png
+    setTimeout(() => {
+        document.getElementById('bg-6-seq1').style.opacity = '1';
+    }, 1500);
+
     // 延迟后进入亮度渐亮流程
-    setTimeout(() => startBrightnessAnimation(), 1200);
+    setTimeout(() => startBrightnessAnimation(), 2500);
 }
 
 // 处理右侧错误道路
@@ -200,32 +205,27 @@ function startBrightnessAnimation() {
     document.getElementById('gyro-status').classList.remove('show');
     hideLockHint();
 
-    // 自动播放6-4.png
-    setTimeout(() => {
-        document.getElementById('bg-6-seq1').style.opacity = '1';
-    }, 300);
-
     // 自动播放6-5.png
     setTimeout(() => {
         document.getElementById('bg-6-seq2').style.opacity = '1';
-    }, 1500);
+    }, 800);
 
     // 夜色蒙版逐层渐隐 - 画面亮度逐渐提高
     setTimeout(() => {
         document.getElementById('night-mask-layer1').classList.add('fade-out');
-    }, 800);
+    }, 300);
 
     setTimeout(() => {
         document.getElementById('night-mask-layer2').classList.add('fade-out');
-    }, 1300);
+    }, 600);
 
     // 中央迷雾消散
     setTimeout(() => {
         document.getElementById('fog-center').style.opacity = '0';
-    }, 1100);
+    }, 500);
 
     // 显示台词弹窗
-    setTimeout(() => showDialogue6(), 3500);
+    setTimeout(() => showDialogue6(), 2500);
 }
 
 // 显示台词弹窗

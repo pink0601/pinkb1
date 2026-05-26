@@ -29,14 +29,14 @@ function hideBubble(id) {
 
 function playDialogueRound1() {
     dialoguePhase = 1;
-    setTimeout(() => showBubble('dialogue-area-1'), 1000);
-    setTimeout(() => hideBubble('dialogue-area-1'), 2500);
-    setTimeout(() => showBubble('dialogue-area-1b'), 2500);
-    setTimeout(() => hideBubble('dialogue-area-1b'), 4000);
+    setTimeout(() => showBubble('dialogue-area-1'), 500);
+    setTimeout(() => hideBubble('dialogue-area-1'), 1800);
+    setTimeout(() => showBubble('dialogue-area-1b'), 1800);
+    setTimeout(() => hideBubble('dialogue-area-1b'), 3000);
     setTimeout(() => {
         dialoguePhase = 2;
         document.getElementById('click-hint-5').classList.add('show');
-    }, 4300);
+    }, 3200);
 }
 
 function playDialogueRound2() {

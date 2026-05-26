@@ -138,9 +138,6 @@ function initScene4() {
         // 停止零星细雨动画
         document.getElementById('rain-container-4').classList.add('cleared');
 
-        // 播放光亮音效
-        playSound4();
-
         // 显示台词弹窗
         setTimeout(() => showDialogue4(), 800);
     }
@@ -179,36 +176,4 @@ function initRain4() {
         drop.style.animationDelay = Math.random() * 3 + 's';
         container.appendChild(drop);
     }
-}
-
-// ========== 光亮音效 ==========
-function playSound4() {
-    try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        // 主音 - 温暖光亮感
-        const osc1 = audioCtx.createOscillator();
-        const gain1 = audioCtx.createGain();
-        osc1.type = 'sine';
-        osc1.connect(gain1);
-        gain1.connect(audioCtx.destination);
-        osc1.frequency.setValueAtTime(600, audioCtx.currentTime);
-        osc1.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.4);
-        gain1.gain.setValueAtTime(0.08, audioCtx.currentTime);
-        gain1.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.2);
-        osc1.start(audioCtx.currentTime);
-        osc1.stop(audioCtx.currentTime + 1.2);
-
-        // 泛音 - 增添空灵感
-        const osc2 = audioCtx.createOscillator();
-        const gain2 = audioCtx.createGain();
-        osc2.type = 'sine';
-        osc2.connect(gain2);
-        gain2.connect(audioCtx.destination);
-        osc2.frequency.setValueAtTime(900, audioCtx.currentTime + 0.15);
-        osc2.frequency.exponentialRampToValueAtTime(1600, audioCtx.currentTime + 0.6);
-        gain2.gain.setValueAtTime(0.04, audioCtx.currentTime + 0.15);
-        gain2.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.5);
-        osc2.start(audioCtx.currentTime + 0.15);
-        osc2.stop(audioCtx.currentTime + 1.5);
-    } catch (e) {}
 }

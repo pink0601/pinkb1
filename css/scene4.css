@@ -39,7 +39,7 @@
 
 /* 马灯拖拽交互区域 */
 #lantern-drag-area {
-    position: absolute; left: 50%; bottom: 18%;
+    position: absolute; left: 50%; bottom: 28%;
     transform: translateX(-50%);
     width: 140px; height: 220px; z-index: 25; cursor: grab;
     touch-action: none;

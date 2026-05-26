@@ -1,15 +1,15 @@
 // ==================== 第八幕：马灯人设盲盒 ====================
 const characters = [
-    { img: '8-1.png', name: '火种守护者', slogan: '"哪怕只剩一丝微光，也要照亮前行的路。"' },
-    { img: '8-2.png', name: '夜行引路人', slogan: '"黑夜再长，也挡不住黎明的脚步。"' },
-    { img: '8-3.png', name: '坚韧跋涉者', slogan: '"每一步都是信仰，每一滴汗都是勋章。"' },
-    { img: '8-4.png', name: '信念追光者', slogan: '"心中有方向，脚下有力量。"' },
-    { img: '8-5.png', name: '温暖同行者', slogan: '"一个人可以走得快，一群人才能走得远。"' },
-    { img: '8-6.png', name: '远见领航员', slogan: '"站得高才能看得远，想得深才能走得稳。"' },
-    { img: '8-7.png', name: '希望播种者', slogan: '"今天的汗水，是明天的花海。"' },
-    { img: '8-8.png', name: '热血先锋者', slogan: '"青春就是用来燃烧的！"' },
-    { img: '8-9.png', name: '忠诚卫士', slogan: '"守护，是最长情的告白。"' },
-    { img: '8-10.png', name: '梦想点灯人', slogan: '"只要还有一口气，就要为梦想发光。"' }
+    { img: 'assets/images/8-1.png', name: '火种守护者', slogan: '"哪怕只剩一丝微光，也要照亮前行的路。"' },
+    { img: 'assets/images/8-2.png', name: '夜行引路人', slogan: '"黑夜再长，也挡不住黎明的脚步。"' },
+    { img: 'assets/images/8-3.png', name: '坚韧跋涉者', slogan: '"每一步都是信仰，每一滴汗都是勋章。"' },
+    { img: 'assets/images/8-4.png', name: '信念追光者', slogan: '"心中有方向，脚下有力量。"' },
+    { img: 'assets/images/8-5.png', name: '温暖同行者', slogan: '"一个人可以走得快，一群人才能走得远。"' },
+    { img: 'assets/images/8-6.png', name: '远见领航员', slogan: '"站得高才能看得远，想得深才能走得稳。"' },
+    { img: 'assets/images/8-7.png', name: '希望播种者', slogan: '"今天的汗水，是明天的花海。"' },
+    { img: 'assets/images/8-8.png', name: '热血先锋者', slogan: '"青春就是用来燃烧的！"' },
+    { img: 'assets/images/8-9.png', name: '忠诚卫士', slogan: '"守护，是最长情的告白。"' },
+    { img: 'assets/images/8-10.png', name: '梦想点灯人', slogan: '"只要还有一口气，就要为梦想发光。"' }
 ];
 
 const teamTexts = [

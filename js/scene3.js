@@ -1,16 +1,18 @@
-// 第三幕 - 雨丝铺满全屏，从右上向左下，随陀螺仪变化
+// 第三幕 - 雨滴Canvas铺满全屏，从右上向左下（与第二幕一致）
 let scene3Initialized = false;
 let isStable3 = false;
 let currentLevel3 = 3;
+let waterCanvas3, waterCtx3;
+let waterDrops3 = [];
 
 function initScene3() {
     if (scene3Initialized) return;
     scene3Initialized = true;
-    createRainDrops();
+
+    initWaterDropsScene3();
     updateScene3Level(3);
-    setRainIntensity3(3);
     setTimeout(() => document.getElementById('text-content-3').classList.add('show'), 1500);
-    
+
     if (window.DeviceOrientationEvent) {
         if (typeof DeviceOrientationEvent.requestPermission === 'function') {
             document.addEventListener('click', requestGyroPermission3, { once: true });
@@ -20,97 +22,122 @@ function initScene3() {
     }
 }
 
-function createRainDrops() {
-    const rainContainer = document.getElementById('rain-container');
-    rainContainer.innerHTML = ''; // 清空之前的雨滴
-    
-    // 增加雨滴数量确保全屏铺满，无空白区域
-    const dropCount = 200;
-    
+function initWaterDropsScene3() {
+    waterCanvas3 = document.getElementById('water-drops-scene3');
+    waterCtx3 = waterCanvas3.getContext('2d');
+    waterDrops3 = [];
+
+    resizeCanvasScene3();
+    startWaterDropsScene3();
+}
+
+function resizeCanvasScene3() {
+    const dpr = window.devicePixelRatio || 1;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    waterCanvas3.width = width * dpr;
+    waterCanvas3.height = height * dpr;
+    waterCanvas3.style.width = width + 'px';
+    waterCanvas3.style.height = height + 'px';
+    waterCtx3.scale(dpr, dpr);
+}
+
+function startWaterDropsScene3() {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    // 雨滴数量与第二幕一致：180个
+    const dropCount = 180;
+
     for (let i = 0; i < dropCount; i++) {
-        const drop = document.createElement('div');
-        drop.className = 'rain-drop';
-        
-        // 扩大分布范围到整个容器（包括溢出区域）
-        // 使用百分比定位，覆盖更大的区域
-        drop.style.left = (Math.random() * 140 - 20) + '%';
-        drop.style.top = (Math.random() * 140 - 20) + '%';
-        
-        // 随机高度 15-45px
-        const height = 15 + Math.random() * 30;
-        drop.style.height = height + 'px';
-        
-        // 随机动画时长 0.3-1.2s（基础速度）
-        drop.style.animationDuration = (0.3 + Math.random() * 0.9) + 's';
-        
-        // 随机延迟 -3s 到 0s，确保动画开始时就有雨滴分布
-        drop.style.animationDelay = (-Math.random() * 3) + 's';
-        
-        // 使用CSS变量控制透明度，便于后续交互调整
-        const opacity = 0.3 + Math.random() * 0.3;
-        drop.style.setProperty('--rain-opacity', opacity);
-        drop.style.opacity = opacity;
-        
-        // 随机粗细
-        drop.style.width = (1 + Math.random() * 1.5) + 'px';
-        
-        rainContainer.appendChild(drop);
+        // 扩大初始分布范围，包括屏幕上方和右侧外部区域
+        waterDrops3.push({
+            x: Math.random() * (width + 200) - 100,
+            y: Math.random() * (height + 300) - 300,
+            length: 12 + Math.random() * 28, // 随机长度 12-40px
+            speed: 6 + Math.random() * 10, // 随机速度 6-16px/frame
+            opacity: 0.2 + Math.random() * 0.35, // 随机透明度 0.2-0.55
+            width: 1 + Math.random() * 1.5 // 随机粗细 1-2.5px
+        });
     }
+    animateWaterDropsScene3();
+}
+
+function animateWaterDropsScene3() {
+    if (currentScene !== 3) return;
+
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    waterCtx3.clearRect(0, 0, width, height);
+
+    waterDrops3.forEach(drop => {
+        waterCtx3.beginPath();
+        waterCtx3.strokeStyle = `rgba(200, 210, 230, ${drop.opacity})`;
+        waterCtx3.lineWidth = drop.width || 1.5;
+        waterCtx3.lineCap = 'round';
+
+        // 从右上向左下：Y向下 + X向左（负值）
+        // 角度约为22度 (tan(22°) ≈ 0.4)
+        const angleX = -0.45; // 向左偏移系数
+        const angleY = 1;     // 向下
+
+        waterCtx3.moveTo(drop.x, drop.y);
+        waterCtx3.lineTo(drop.x + drop.length * angleX, drop.y + drop.length * angleY);
+        waterCtx3.stroke();
+
+        // 更新位置
+        drop.y += drop.speed;
+        drop.x += drop.speed * angleX;
+
+        // 边界检查：无缝循环
+        const buffer = drop.length * 2;
+
+        if (drop.y > height + buffer) {
+            // 从顶部重新出现，随机X位置（包括屏幕右侧外部）
+            drop.y = -buffer - Math.random() * 100;
+            drop.x = Math.random() * (width + 150);
+        }
+
+        if (drop.x < -buffer - 50) {
+            // 从右侧重新出现
+            drop.x = width + buffer + Math.random() * 100;
+            drop.y = Math.random() * (height + 100) - 50;
+        }
+    });
+
+    requestAnimationFrame(animateWaterDropsScene3);
 }
 
 function setRainIntensity3(level) {
-    const rainDrops = document.querySelectorAll('#rain-container .rain-drop');
-    
-    // 根据级别设置不同的雨滴参数
+    // 根据级别调整雨滴参数
     const config = {
         3: { // 剧烈 - 快速、密集、明显
-            durationMin: 0.15, durationMax: 0.35,
-            opacityMin: 0.55, opacityMax: 0.85,
-            widthMin: 1.8, widthMax: 2.5,
-            heightMin: 25, heightMax: 50
+            speedMult: 1.5,
+            opacityMult: 1.3
         },
-        2: { // 中等 - 适中速度
-            durationMin: 0.5, durationMax: 0.9,
-            opacityMin: 0.4, opacityMax: 0.6,
-            widthMin: 1.5, widthMax: 2,
-            heightMin: 18, heightMax: 38
+        2: { // 中等
+            speedMult: 1.0,
+            opacityMult: 1.0
         },
-        1: { // 轻微 - 缓慢、稀疏、淡
-            durationMin: 1.0, durationMax: 1.8,
-            opacityMin: 0.2, opacityMax: 0.35,
-            widthMin: 1, widthMax: 1.5,
-            heightMin: 12, heightMax: 25
+        1: { // 轻微
+            speedMult: 0.6,
+            opacityMult: 0.7
         },
-        0: { // 静止 - 极慢、极淡、几乎不可见
-            durationMin: 3.0, durationMax: 5.0,
-            opacityMin: 0.03, opacityMax: 0.1,
-            widthMin: 0.5, widthMax: 1,
-            heightMin: 8, heightMax: 15
+        0: { // 静止
+            speedMult: 0.2,
+            opacityMult: 0.3
         }
     };
-    
+
     const cfg = config[level];
-    
-    rainDrops.forEach((drop, index) => {
-        // 使用随机分布，但保持平滑过渡
-        const randomFactor = (index % 10) / 10; // 0-1之间的值
-        
-        // 动画时长
-        const duration = cfg.durationMin + Math.random() * (cfg.durationMax - cfg.durationMin);
-        drop.style.animationDuration = duration + 's';
-        
-        // 透明度 - 使用CSS变量和style同时设置
-        const opacity = cfg.opacityMin + Math.random() * (cfg.opacityMax - cfg.opacityMin);
-        drop.style.setProperty('--rain-opacity', opacity);
-        drop.style.opacity = opacity;
-        
-        // 粗细
-        const width = cfg.widthMin + Math.random() * (cfg.widthMax - cfg.widthMin);
-        drop.style.width = width + 'px';
-        
-        // 长度
-        const height = cfg.heightMin + Math.random() * (cfg.heightMax - cfg.heightMin);
-        drop.style.height = height + 'px';
+
+    waterDrops3.forEach(drop => {
+        // 恢复基础速度
+        const baseSpeed = 6 + Math.random() * 10;
+        drop.speed = baseSpeed * cfg.speedMult;
+        drop.opacity = (0.2 + Math.random() * 0.35) * cfg.opacityMult;
     });
 }
 
@@ -134,7 +161,7 @@ function handleOrientation3(event) {
     else if (tilt < 25) newLevel = 1;
     else if (tilt < 45) newLevel = 2;
     else newLevel = 3;
-    
+
     if (newLevel !== currentLevel3) {
         currentLevel3 = newLevel;
         updateScene3Level(newLevel);
@@ -146,9 +173,9 @@ function updateScene3Level(level) {
     const container = document.getElementById('scene3');
     const lanternGlow = document.getElementById('lantern-glow-3');
     const bg2 = document.getElementById('bg-3-2');
-    
+
     container.classList.remove('shake', 'shake-moderate', 'shake-light');
-    
+
     switch(level) {
         case 3:
             container.classList.add('shake');

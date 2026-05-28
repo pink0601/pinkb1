@@ -210,6 +210,11 @@ function startBrightnessAnimation() {
         document.getElementById('bg-6-seq2').style.opacity = '1';
     }, 800);
 
+    // 6-5.png 后再自动播放 6-6.png
+    setTimeout(() => {
+        document.getElementById('bg-6-seq3').style.opacity = '1';
+    }, 1600);
+
     // 夜色蒙版逐层渐隐 - 画面亮度逐渐提高
     setTimeout(() => {
         document.getElementById('night-mask-layer1').classList.add('fade-out');

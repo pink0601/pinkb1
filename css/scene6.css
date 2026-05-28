@@ -26,9 +26,9 @@
 /* 左侧迷雾 - 初始较浓，正确选择后消散 */
 #fog-left {
     background: radial-gradient(ellipse at 30% 50%,
-        rgba(20, 25, 40, 0.85) 0%,
-        rgba(15, 20, 35, 0.75) 30%,
-        rgba(25, 30, 45, 0.5) 60%,
+        rgba(20, 25, 40, 0.72) 0%,
+        rgba(15, 20, 35, 0.64) 30%,
+        rgba(25, 30, 45, 0.42) 60%,
         transparent 85%);
     z-index: 15;
 }
@@ -40,9 +40,9 @@
 /* 右侧迷雾 - 初始较浓，选择后加厚锁定 */
 #fog-right {
     background: radial-gradient(ellipse at 70% 50%,
-        rgba(20, 25, 40, 0.85) 0%,
-        rgba(15, 20, 35, 0.75) 30%,
-        rgba(25, 30, 45, 0.5) 60%,
+        rgba(20, 25, 40, 0.72) 0%,
+        rgba(15, 20, 35, 0.64) 30%,
+        rgba(25, 30, 45, 0.42) 60%,
         transparent 85%);
     z-index: 15;
 }
@@ -58,9 +58,9 @@
 /* 中央迷雾 - 基础遮罩 */
 #fog-center {
     background: radial-gradient(ellipse at 50% 50%,
-        rgba(15, 20, 30, 0.7) 0%,
-        rgba(20, 25, 40, 0.5) 40%,
-        rgba(25, 30, 45, 0.3) 70%,
+        rgba(15, 20, 30, 0.6) 0%,
+        rgba(20, 25, 40, 0.42) 40%,
+        rgba(25, 30, 45, 0.25) 70%,
         transparent 100%);
     z-index: 14;
 }
@@ -72,16 +72,16 @@
 }
 #night-mask-layer1 {
     background: linear-gradient(to bottom,
-        rgba(5, 5, 15, 0.5) 0%,
-        rgba(8, 10, 22, 0.35) 50%,
-        rgba(12, 15, 30, 0.2) 100%);
+        rgba(5, 5, 15, 0.42) 0%,
+        rgba(8, 10, 22, 0.3) 50%,
+        rgba(12, 15, 30, 0.17) 100%);
     z-index: 20;
     opacity: 1;
     transition: opacity 2s ease;
 }
 #night-mask-layer2 {
     background: radial-gradient(ellipse at 50% 30%,
-        rgba(10, 15, 30, 0.25) 0%,
+        rgba(10, 15, 30, 0.21) 0%,
         transparent 60%);
     z-index: 21;
     opacity: 1;

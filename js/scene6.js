@@ -28,7 +28,7 @@ function requestGyroPermission() {
                 if (permissionState === 'granted') {
                     startGyroListener();
                 } else {
-                    showGyroError('需要陀螺仪权限才能继续探寻');
+                    showGyroError('需要陀螺仪权限');
                 }
             })
             .catch(() => showGyroError('陀螺仪权限请求失败'));
@@ -99,11 +99,9 @@ function handleLeftPath() {
     // 如果之前被锁定，先解锁
     if (isLocked) {
         isLocked = false;
-        hideLockHint();
     }
 
     updateStatusText('发现道路！视野逐渐清晰');
-    document.getElementById('direction-indicator').classList.remove('show');
 
     // 显示左侧背景 6-3.png
     document.getElementById('bg-6-left').style.opacity = '1';
@@ -131,16 +129,11 @@ function handleLeftPath() {
 
 // 处理右侧错误道路
 function handleRightPath() {
-    updateStatusText('此路不通，迷雾太深！');
     document.getElementById('gyro-status').classList.add('error');
-    document.getElementById('direction-indicator').classList.add('show');
 
     // 显示右侧背景 6-2.png
     document.getElementById('bg-6-right').style.opacity = '1';
     document.getElementById('bg-6-left').style.opacity = '0';
-
-    // 显示锁定提示
-    showLockHint('请回转手机，向左探寻正确道路');
 
     // 叠加厚重迷雾强化昏暗视觉效果
     document.getElementById('fog-right').classList.add('thicken');
@@ -154,36 +147,11 @@ function handleRightPath() {
 
 // 处理中间位置（回退/重置）
 function handleCenterPath() {
-    if (isLocked) {
-        updateStatusText('请继续向左倾斜，寻找正确道路');
-    } else {
-        updateStatusText('左右倾斜手机探寻前路');
-    }
-
     document.getElementById('gyro-status').classList.remove('error');
-    document.getElementById('direction-indicator').classList.remove('show');
 
     // 恢复迷雾状态
     document.getElementById('fog-right').classList.remove('thicken');
     document.getElementById('fog-center').style.opacity = '';
-}
-
-// 显示锁定提示
-function showLockHint(text) {
-    let lockHint = document.getElementById('lock-hint');
-    if (!lockHint) {
-        lockHint = document.createElement('div');
-        lockHint.id = 'lock-hint';
-        document.getElementById('scene6').appendChild(lockHint);
-    }
-    lockHint.textContent = text;
-    lockHint.classList.add('show');
-}
-
-// 隐藏锁定提示
-function hideLockHint() {
-    const lockHint = document.getElementById('lock-hint');
-    if (lockHint) lockHint.classList.remove('show');
 }
 
 // 更新状态文字
@@ -203,7 +171,6 @@ function showGyroError(message) {
 function startBrightnessAnimation() {
     // 隐藏状态提示
     document.getElementById('gyro-status').classList.remove('show');
-    hideLockHint();
 
     // 自动播放6-5.png
     setTimeout(() => {
@@ -213,7 +180,7 @@ function startBrightnessAnimation() {
     // 6-5.png 后再自动播放 6-6.png
     setTimeout(() => {
         document.getElementById('bg-6-seq3').style.opacity = '1';
-    }, 1600);
+    }, 1200);
 
     // 夜色蒙版逐层渐隐 - 画面亮度逐渐提高
     setTimeout(() => {

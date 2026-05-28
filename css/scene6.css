@@ -13,9 +13,10 @@
 #bg-6-right { background-image: url('../assets/images/6-2.png'); }
 /* 向左倾斜显示 6-3.png */
 #bg-6-left { background-image: url('../assets/images/6-3.png'); }
-/* 路线确认后自动播放 6-4.png 和 6-5.png */
+/* 路线确认后自动播放 6-4.png 6-5.png 6-6.png */
 #bg-6-seq1 { background-image: url('../assets/images/6-4.png'); }
 #bg-6-seq2 { background-image: url('../assets/images/6-5.png'); }
+#bg-6-seq3 { background-image: url('../assets/images/6-6.png'); }
 
 /* 多层迷雾遮罩 - 不同浓度 */
 #fog-left, #fog-right, #fog-center {

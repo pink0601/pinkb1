@@ -8,7 +8,7 @@
     opacity: 0; transition: opacity 1.5s ease;
 }
 /* 初始显示 6-1.png */
-#bg-6-initial { background-image: url('../assets/images/6-1.png'); opacity: 1; }
+#bg-6-initial { background-image: url('../assets/images/6-1.png'); }
 /* 向右倾斜显示 6-2.png */
 #bg-6-right { background-image: url('../assets/images/6-2.png'); }
 /* 向左倾斜显示 6-3.png */

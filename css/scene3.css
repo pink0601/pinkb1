@@ -6,7 +6,6 @@
     transition: opacity 1.5s ease;
 }
 #bg-3-1 { background-image: url('../assets/images/3-1.png'); opacity: 1; }
-#bg-3-2 { background-image: url('../assets/images/4-1.png'); }
 
 /* 雨滴Canvas铺满全屏 */
 #water-drops-scene3 {

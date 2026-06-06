@@ -53,7 +53,7 @@ function playDialogueRound2() {
 function triggerScene5End() {
     dialoguePhase = 4;
     document.getElementById('bg-layer-5-after').style.opacity = '1';
-    playSound5();
+    // 不播放声音
     setTimeout(() => {
         document.getElementById('swipe-5').classList.add('show');
         swipeEnabled = true;

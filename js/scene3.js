@@ -11,7 +11,7 @@ function initScene3() {
 
     initWaterDropsScene3();
     updateScene3Level(3);
-    setTimeout(() => document.getElementById('text-content-3').classList.add('show'), 1500);
+    // 文字等手机放稳后再显示，不在初始化时显示
 
     if (window.DeviceOrientationEvent) {
         if (typeof DeviceOrientationEvent.requestPermission === 'function') {
@@ -204,6 +204,8 @@ function updateScene3Level(level) {
 
 function stabilizeScene3() {
     isStable3 = true;
+    // 手机放稳后显示文字
+    document.getElementById('text-content-3').classList.add('show');
     setTimeout(() => document.getElementById('dialogue-quote-3').classList.add('show'), 800);
     setTimeout(() => {
         document.getElementById('swipe-3').classList.add('show');

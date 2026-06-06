@@ -172,7 +172,6 @@ function handleOrientation3(event) {
 function updateScene3Level(level) {
     const container = document.getElementById('scene3');
     const lanternGlow = document.getElementById('lantern-glow-3');
-    const bg2 = document.getElementById('bg-3-2');
 
     container.classList.remove('shake', 'shake-moderate', 'shake-light');
 
@@ -195,7 +194,6 @@ function updateScene3Level(level) {
         case 0:
             lanternGlow.style.opacity = '1';
             lanternGlow.style.filter = 'blur(0)';
-            bg2.style.opacity = '1';
             document.getElementById('hint-text-3').style.display = 'none';
             if (!isStable3) stabilizeScene3();
             break;

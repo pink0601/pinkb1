@@ -171,29 +171,20 @@ function handleOrientation3(event) {
 
 function updateScene3Level(level) {
     const container = document.getElementById('scene3');
-    const lanternGlow = document.getElementById('lantern-glow-3');
 
     container.classList.remove('shake', 'shake-moderate', 'shake-light');
 
     switch(level) {
         case 3:
             container.classList.add('shake');
-            lanternGlow.style.opacity = '0.25';
-            lanternGlow.style.filter = 'blur(6px)';
             break;
         case 2:
             container.classList.add('shake-moderate');
-            lanternGlow.style.opacity = '0.4';
-            lanternGlow.style.filter = 'blur(4px)';
             break;
         case 1:
             container.classList.add('shake-light');
-            lanternGlow.style.opacity = '0.6';
-            lanternGlow.style.filter = 'blur(2px)';
             break;
         case 0:
-            lanternGlow.style.opacity = '1';
-            lanternGlow.style.filter = 'blur(0)';
             document.getElementById('hint-text-3').style.display = 'none';
             if (!isStable3) stabilizeScene3();
             break;
@@ -209,7 +200,7 @@ function stabilizeScene3() {
         document.getElementById('swipe-3').classList.add('show');
         swipeEnabled = true;
     }, 2500);
-    playSound3();
+    // 不播放声音
 }
 
 function playSound3() {

@@ -60,21 +60,3 @@ function triggerScene5End() {
     }, 2500);
 }
 
-function playSound5() {
-    try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        [523, 659, 784].forEach((freq, i) => {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.15);
-            gain.gain.setValueAtTime(0, audioCtx.currentTime + i * 0.15);
-            gain.gain.linearRampToValueAtTime(0.06, audioCtx.currentTime + i * 0.15 + 0.3);
-            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i * 0.15 + 2);
-            osc.start(audioCtx.currentTime + i * 0.15);
-            osc.stop(audioCtx.currentTime + i * 0.15 + 2);
-        });
-    } catch (e) {}
-}

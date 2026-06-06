@@ -71,12 +71,24 @@ function savePoster() {
     const img = new Image();
     img.src = currentCharacter.img;
     img.onload = function() {
-        // 图片居中展示
-        const imgSize = 400;
-        const x = W/2 - imgSize/2;
-        const y = 200;
-        ctx.drawImage(img, x, y, imgSize, imgSize);
-        drawPosterText(ctx, W, H);
+        // 按9:16比例缩放图片，保持原始比例完整展示
+        const maxW = 400;
+        const maxH = 710;
+        const scale = Math.min(maxW / img.width, maxH / img.height);
+        const drawW = img.width * scale;
+        const drawH = img.height * scale;
+        const x = W/2 - drawW/2;
+        const y = 160;
+        ctx.drawImage(img, x, y, drawW, drawH);
+
+        // 图片底部渐变遮罩，让文字区域更清晰
+        const gradient = ctx.createLinearGradient(0, y + drawH - 120, 0, y + drawH);
+        gradient.addColorStop(0, 'rgba(17, 17, 17, 0)');
+        gradient.addColorStop(1, 'rgba(17, 17, 17, 1)');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, y + drawH - 120, W, 120);
+
+        drawPosterText(ctx, W, H, y + drawH);
         document.getElementById('posterPreview').classList.add('active');
     };
     img.onerror = function() {
@@ -85,40 +97,41 @@ function savePoster() {
     };
 }
 
-function drawPosterText(ctx, W, H) {
+function drawPosterText(ctx, W, H, imgBottom) {
+    const textStart = Math.min(imgBottom + 30, H - 350);
+
     // 标题
     ctx.fillStyle = '#FFD700';
-    ctx.font = 'bold 38px "PingFang SC", "Microsoft YaHei", sans-serif';
+    ctx.font = 'bold 36px "PingFang SC", "Microsoft YaHei", sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('我的马灯人设', W/2, 140);
+    ctx.fillText('我的马灯人设', W/2, textStart);
 
     // 金色分界线
-    ctx.strokeStyle = 'rgba(255, 215, 0, 0.6)';
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = 'rgba(255, 215, 0, 0.5)';
+    ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.moveTo(180, 680);
-    ctx.lineTo(W - 180, 680);
+    ctx.moveTo(W/2 - 80, textStart + 20);
+    ctx.lineTo(W/2 + 80, textStart + 20);
     ctx.stroke();
 
     // 人设名称
     ctx.fillStyle = '#FFD700';
-    ctx.font = 'bold 52px "PingFang SC", "Microsoft YaHei", sans-serif';
-    ctx.fillText(currentCharacter.name, W/2, 750);
+    ctx.font = 'bold 48px "PingFang SC", "Microsoft YaHei", sans-serif';
+    ctx.fillText(currentCharacter.name, W/2, textStart + 80);
 
     // 标语
     ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
-    ctx.font = '26px "PingFang SC", "Microsoft YaHei", sans-serif';
-    wrapText(ctx, currentCharacter.slogan, W/2, 820, W - 120, 40);
+    ctx.font = '24px "PingFang SC", "Microsoft YaHei", sans-serif';
+    wrapText(ctx, currentCharacter.slogan, W/2, textStart + 130, W - 120, 38);
 
     // 底部组队引导
-    const teamText = teamTexts[Math.floor(Math.random() * teamTexts.length)];
     ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-    ctx.font = '22px "PingFang SC", "Microsoft YaHei", sans-serif';
-    ctx.fillText('分享给好友，互换身份组队', W/2, H - 120);
+    ctx.font = '20px "PingFang SC", "Microsoft YaHei", sans-serif';
+    ctx.fillText('分享给好友，互换身份组队', W/2, H - 110);
 
     ctx.fillStyle = 'rgba(255, 215, 0, 0.45)';
-    ctx.font = '500 24px "PingFang SC", "Microsoft YaHei", sans-serif';
-    ctx.fillText('「你是' + currentCharacter.name + '，我是___，' + teamText + '」', W/2, H - 70);
+    ctx.font = '500 22px "PingFang SC", "Microsoft YaHei", sans-serif';
+    ctx.fillText('「你是' + currentCharacter.name + '，我是___，' + teamTexts[Math.floor(Math.random() * teamTexts.length)] + '」', W/2, H - 65);
 }
 
 // 文字自动换行

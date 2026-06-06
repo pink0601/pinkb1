@@ -29,25 +29,25 @@ function hideBubble(id) {
 
 function playDialogueRound1() {
     dialoguePhase = 1;
-    setTimeout(() => showBubble('dialogue-area-1'), 500);
-    setTimeout(() => hideBubble('dialogue-area-1'), 1800);
-    setTimeout(() => showBubble('dialogue-area-1b'), 1800);
-    setTimeout(() => hideBubble('dialogue-area-1b'), 3000);
+    setTimeout(() => showBubble('dialogue-area-1'), 400);
+    setTimeout(() => hideBubble('dialogue-area-1'), 1440);
+    setTimeout(() => showBubble('dialogue-area-1b'), 1440);
+    setTimeout(() => hideBubble('dialogue-area-1b'), 2400);
     setTimeout(() => {
         dialoguePhase = 2;
         document.getElementById('click-hint-5').classList.add('show');
-    }, 3200);
+    }, 2560);
 }
 
 function playDialogueRound2() {
     dialoguePhase = 3;
     document.getElementById('click-hint-5').classList.remove('show');
     document.getElementById('click-hint-5').style.display = 'none';
-    setTimeout(() => showBubble('dialogue-area-2'), 200);
-    setTimeout(() => hideBubble('dialogue-area-2'), 2800);
-    setTimeout(() => showBubble('dialogue-area-2b'), 3200);
-    setTimeout(() => hideBubble('dialogue-area-2b'), 7000);
-    setTimeout(() => triggerScene5End(), 7300);
+    setTimeout(() => showBubble('dialogue-area-2'), 160);
+    setTimeout(() => hideBubble('dialogue-area-2'), 2240);
+    setTimeout(() => showBubble('dialogue-area-2b'), 2560);
+    setTimeout(() => hideBubble('dialogue-area-2b'), 5600);
+    setTimeout(() => triggerScene5End(), 5840);
 }
 
 function triggerScene5End() {
@@ -59,4 +59,3 @@ function triggerScene5End() {
         swipeEnabled = true;
     }, 2500);
 }
-

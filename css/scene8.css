@@ -124,25 +124,18 @@
 }
 
 .character-avatar {
-    width: 100px; height: 100px;
     position: absolute;
     top: -50px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(18, 18, 18, 0.98);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    border: none;
-    overflow: hidden;
     z-index: 10;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
 .character-avatar img {
-    width: 200%;
-    height: auto;
-    object-fit: cover;
-    object-position: center 12.5%;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 215, 0, 0.3);
+    object-fit: contain;
 }
 
 .character-name {

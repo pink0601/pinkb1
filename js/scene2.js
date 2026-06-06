@@ -140,6 +140,10 @@ function animateWaterDrops() {
 }
 
 function initTouchEvents() {
+    let swipeStartX = 0;
+    let swipeStartY = 0;
+    let isSwiping = false;
+
     function getPosition(e) {
         const rect = fogCanvas.getBoundingClientRect();
         if (e.touches) {
@@ -148,8 +152,7 @@ function initTouchEvents() {
         return { x: e.clientX - rect.left, y: e.clientY - rect.top };
     }
 
-    function eraseFog(x, y) {
-        const brushSize = 50;
+    function eraseFog(x, y, brushSize) {
         fogCtx.globalCompositeOperation = 'destination-out';
         const gradient = fogCtx.createRadialGradient(x, y, 0, x, y, brushSize);
         gradient.addColorStop(0, 'rgba(0, 0, 0, 1)');
@@ -159,30 +162,79 @@ function initTouchEvents() {
         fogCtx.beginPath();
         fogCtx.arc(x, y, brushSize, 0, Math.PI * 2);
         fogCtx.fill();
-
-        if (lastX && lastY) {
-            const dist = Math.sqrt(Math.pow(x - lastX, 2) + Math.pow(y - lastY, 2));
-            const steps = Math.ceil(dist / 10);
-            for (let i = 0; i < steps; i++) {
-                const t = i / steps;
-                fogCtx.beginPath();
-                fogCtx.arc(lastX + (x - lastX) * t, lastY + (y - lastY) * t, brushSize * 0.8, 0, Math.PI * 2);
-                fogCtx.fill();
-            }
-        }
-
         fogCtx.globalCompositeOperation = 'source-over';
-        lastX = x; lastY = y;
+    }
+
+    function eraseLine(x1, y1, x2, y2, brushSize) {
+        const dist = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+        const steps = Math.ceil(dist / 5);
+        for (let i = 0; i <= steps; i++) {
+            const t = i / steps;
+            eraseFog(x1 + (x2 - x1) * t, y1 + (y2 - y1) * t, brushSize);
+        }
+    }
+
+    function handleSwipe(startX, startY, endX, endY) {
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        const swipeDistance = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
+        
+        // 左右滑动扫雾 - 在滑动路径上擦除雾气
+        const brushSize = 80;
+        eraseLine(startX, startY, endX, endY, brushSize);
+        
+        // 在滑动路径两侧也擦除一些雾气，模拟扫开的效果
+        const offsetX = (endY - startY) * 0.3;
+        const offsetY = -(endX - startX) * 0.3;
+        eraseLine(startX + offsetX, startY + offsetY, endX + offsetX, endY + offsetY, brushSize * 0.6);
+        eraseLine(startX - offsetX, startY - offsetY, endX - offsetX, endY - offsetY, brushSize * 0.6);
+        
         updateClearProgress();
     }
 
-    fogCanvas.addEventListener('touchstart', (e) => { e.preventDefault(); isDrawing = true; const pos = getPosition(e); lastX = pos.x; lastY = pos.y; eraseFog(pos.x, pos.y); }, {passive: false});
-    fogCanvas.addEventListener('touchmove', (e) => { e.preventDefault(); if (!isDrawing) return; const pos = getPosition(e); eraseFog(pos.x, pos.y); }, {passive: false});
-    fogCanvas.addEventListener('touchend', () => { isDrawing = false; lastX = 0; lastY = 0; });
-    fogCanvas.addEventListener('mousedown', (e) => { isDrawing = true; const pos = getPosition(e); lastX = pos.x; lastY = pos.y; eraseFog(pos.x, pos.y); });
-    fogCanvas.addEventListener('mousemove', (e) => { if (!isDrawing) return; const pos = getPosition(e); eraseFog(pos.x, pos.y); });
-    fogCanvas.addEventListener('mouseup', () => { isDrawing = false; lastX = 0; lastY = 0; });
-    fogCanvas.addEventListener('mouseleave', () => { isDrawing = false; lastX = 0; lastY = 0; });
+    // 触摸事件
+    fogCanvas.addEventListener('touchstart', (e) => { 
+        e.preventDefault(); 
+        isSwiping = true;
+        const pos = getPosition(e);
+        swipeStartX = pos.x;
+        swipeStartY = pos.y;
+    }, {passive: false});
+    
+    fogCanvas.addEventListener('touchmove', (e) => { 
+        e.preventDefault(); 
+        if (!isSwiping) return;
+        const pos = getPosition(e);
+        // 滑动过程中持续擦除
+        eraseLine(swipeStartX, swipeStartY, pos.x, pos.y, 60);
+        swipeStartX = pos.x;
+        swipeStartY = pos.y;
+        updateClearProgress();
+    }, {passive: false});
+    
+    fogCanvas.addEventListener('touchend', (e) => { 
+        isSwiping = false;
+    });
+
+    // 鼠标事件
+    fogCanvas.addEventListener('mousedown', (e) => { 
+        isSwiping = true;
+        const pos = getPosition(e);
+        swipeStartX = pos.x;
+        swipeStartY = pos.y;
+    });
+    
+    fogCanvas.addEventListener('mousemove', (e) => { 
+        if (!isSwiping) return;
+        const pos = getPosition(e);
+        eraseLine(swipeStartX, swipeStartY, pos.x, pos.y, 60);
+        swipeStartX = pos.x;
+        swipeStartY = pos.y;
+        updateClearProgress();
+    });
+    
+    fogCanvas.addEventListener('mouseup', () => { isSwiping = false; });
+    fogCanvas.addEventListener('mouseleave', () => { isSwiping = false; });
 }
 
 function updateClearProgress() {
@@ -198,7 +250,7 @@ function updateClearProgress() {
     document.getElementById('fog-progress-bar').style.width = clearPercent + '%';
     document.getElementById('clear-percent').textContent = '已探明: ' + clearPercent + '%';
 
-    if (clearPercent >= 80 && !isScene2Cleared) {
+    if (clearPercent >= 70 && !isScene2Cleared) {
         triggerScene2Clear();
     }
 }

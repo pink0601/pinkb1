@@ -131,9 +131,22 @@ function initScene4() {
         document.getElementById('bg-4-3').style.opacity = '0';
         document.getElementById('bg-4-4').style.opacity = '1';
 
-        // 马灯定格最高托举姿态 - 仅位移，无光晕扩散
+        // 马灯定格最高托举姿态 - 保持lift类以维持光晕
+        lantern.classList.add('lift');
         lantern.style.transition = 'transform 0.6s ease-out';
         lantern.style.transform = 'translateX(-50%) translateY(-130px)';
+
+        // 托举完成后核心光晕消失
+        const lanternCore = lantern.querySelector('.lantern-core-4');
+        if (lanternCore) {
+            lanternCore.style.transition = 'opacity 0.8s ease-out';
+            lanternCore.style.opacity = '0';
+        }
+        const lanternGlow = lantern.querySelector('.lantern-glow-4');
+        if (lanternGlow) {
+            lanternGlow.style.transition = 'opacity 0.8s ease-out';
+            lanternGlow.style.opacity = '0';
+        }
 
         // 停止零星细雨动画
         document.getElementById('rain-container-4').classList.add('cleared');

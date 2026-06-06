@@ -72,15 +72,15 @@ function handleOrientation(event) {
     const CENTER_MIN = -8;        // 中间区域下限
     const CENTER_MAX = 8;         // 中间区域上限
 
-    // 方向判定
+    // 方向判定 - 反向：右边为正确道路，左边为错误道路
     if (relativeGamma < LEFT_THRESHOLD) {
-        // 偏向左侧 - 正确道路
+        // 偏向左侧 - 错误道路
         if (currentDirection !== 'left') {
             currentDirection = 'left';
             handleLeftPath();
         }
     } else if (relativeGamma > RIGHT_THRESHOLD) {
-        // 偏向右侧 - 错误道路
+        // 偏向右侧 - 正确道路
         if (currentDirection !== 'right') {
             currentDirection = 'right';
             handleRightPath();
@@ -94,8 +94,26 @@ function handleOrientation(event) {
     }
 }
 
-// 处理左侧正确道路
+// 处理左侧错误道路
 function handleLeftPath() {
+    document.getElementById('gyro-status').classList.add('error');
+
+    // 显示左侧背景 6-3.png
+    document.getElementById('bg-6-left').style.opacity = '1';
+    document.getElementById('bg-6-right').style.opacity = '0';
+
+    // 叠加厚重迷雾强化昏暗视觉效果
+    document.getElementById('fog-left').classList.add('thicken');
+
+    // 中央迷雾也加重
+    document.getElementById('fog-center').style.opacity = '0.9';
+
+    // 锁定状态 - 仅监听回转角度
+    isLocked = true;
+}
+
+// 处理右侧正确道路
+function handleRightPath() {
     // 如果之前被锁定，先解锁
     if (isLocked) {
         isLocked = false;
@@ -103,46 +121,28 @@ function handleLeftPath() {
 
     updateStatusText('发现道路！视野逐渐清晰');
 
-    // 显示左侧背景 6-3.png
-    document.getElementById('bg-6-left').style.opacity = '1';
-    document.getElementById('bg-6-right').style.opacity = '0';
+    // 显示右侧背景 6-2.png
+    document.getElementById('bg-6-right').style.opacity = '1';
+    document.getElementById('bg-6-left').style.opacity = '0';
 
-    // 解除左侧迷雾 - 呈现清晰通行视野
-    document.getElementById('fog-left').classList.add('clear');
+    // 解除右侧迷雾 - 呈现清晰通行视野
+    document.getElementById('fog-right').classList.add('clear');
 
-    // 如果右侧迷雾加厚过，恢复
-    document.getElementById('fog-right').classList.remove('thicken');
+    // 如果左侧迷雾加厚过，恢复
+    document.getElementById('fog-left').classList.remove('thicken');
 
     // 标记完成，停止监听
     pathCompleted = true;
     gyroActive = false;
     window.removeEventListener('deviceorientation', handleOrientation);
 
-    // 6-3.png 显现后自动显现 6-4.png
+    // 6-2.png 显现后自动显现 6-4.png
     setTimeout(() => {
         document.getElementById('bg-6-seq1').style.opacity = '1';
     }, 1500);
 
     // 延迟后进入亮度渐亮流程
     setTimeout(() => startBrightnessAnimation(), 2500);
-}
-
-// 处理右侧错误道路
-function handleRightPath() {
-    document.getElementById('gyro-status').classList.add('error');
-
-    // 显示右侧背景 6-2.png
-    document.getElementById('bg-6-right').style.opacity = '1';
-    document.getElementById('bg-6-left').style.opacity = '0';
-
-    // 叠加厚重迷雾强化昏暗视觉效果
-    document.getElementById('fog-right').classList.add('thicken');
-
-    // 中央迷雾也加重
-    document.getElementById('fog-center').style.opacity = '0.9';
-
-    // 锁定状态 - 仅监听回转角度
-    isLocked = true;
 }
 
 // 处理中间位置（回退/重置）

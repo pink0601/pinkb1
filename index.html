@@ -16,7 +16,22 @@
 </head>
 <body>
     <div class="texture-overlay"></div>
-    
+
+    <!-- 全局进度条 -->
+    <div id="global-progress-bar">
+        <div id="global-progress-fill"></div>
+        <div id="global-progress-nodes">
+            <div class="progress-node" data-scene="1"><img class="node-lantern" src="assets/images/8-11.png" alt="1"></div>
+            <div class="progress-node" data-scene="2"><img class="node-lantern" src="assets/images/8-11.png" alt="2"></div>
+            <div class="progress-node" data-scene="3"><img class="node-lantern" src="assets/images/8-11.png" alt="3"></div>
+            <div class="progress-node" data-scene="4"><img class="node-lantern" src="assets/images/8-11.png" alt="4"></div>
+            <div class="progress-node" data-scene="5"><img class="node-lantern" src="assets/images/8-11.png" alt="5"></div>
+            <div class="progress-node" data-scene="6"><img class="node-lantern" src="assets/images/8-11.png" alt="6"></div>
+            <div class="progress-node" data-scene="7"><img class="node-lantern" src="assets/images/8-11.png" alt="7"></div>
+            <div class="progress-node" data-scene="8"><img class="node-lantern" src="assets/images/8-11.png" alt="8"></div>
+        </div>
+    </div>
+
     <!-- 第一幕：封面 -->
     <div id="scene1" class="scene">
         <div class="text-content">
@@ -279,6 +294,7 @@
         <div class="toast-8" id="toast8"></div>
     </div>
 
+    <script src="js/progress.js"></script>
     <script src="js/scene1.js"></script>
     <script src="js/scene2.js"></script>
     <script src="js/scene3.js"></script>

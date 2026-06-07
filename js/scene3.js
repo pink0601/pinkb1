@@ -201,6 +201,9 @@ function stabilizeScene3() {
         swipeEnabled = true;
     }, 2500);
     // 不播放声音
+
+    // 标记第三幕完成
+    completeScene(3);
 }
 
 function playSound3() {

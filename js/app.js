@@ -120,6 +120,8 @@ function enableGlobalSwipe() {
 
 function goToNextScene() {
     if (currentScene < 8) {
+        // 上滑完成，浮现当前幕对应的进度栏图标
+        onSceneTransition(currentScene);
         switchToScene(currentScene + 1);
     } else {
         document.body.style.opacity = '0';
@@ -131,5 +133,12 @@ function goToNextScene() {
 window.addEventListener('load', () => {
     document.body.style.fontFamily = '"PingFang SC", "Microsoft YaHei", "Songti SC", "SimSun", serif';
     enableGlobalSwipe();
-    initScene1();
+
+    // 刷新/重启：自动读取 localStorage，恢复至上次停留的幕
+    const savedScene = progressState.currentScene;
+    if (savedScene > 1) {
+        switchToScene(savedScene);
+    } else {
+        initScene1();
+    }
 });

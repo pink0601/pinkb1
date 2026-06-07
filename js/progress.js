@@ -43,6 +43,13 @@ function updateProgressUI() {
         const sceneNum = index + 1;
         node.classList.remove('completed', 'current', 'pending');
 
+        // 清除 inline style，确保 CSS 类控制显示
+        const img = node.querySelector('.node-lantern');
+        if (img) {
+            img.style.opacity = '';
+            img.style.transform = '';
+        }
+
         if (progressState.finishedScene.includes(sceneNum)) {
             node.classList.add('completed');
         } else if (sceneNum === progressState.currentScene) {
@@ -54,7 +61,7 @@ function updateProgressUI() {
         }
     });
 
-    // 已完成的幕显示图标（从 pending 变为 completed 时触发动画）
+    // 已完成的幕显示图标
     progressState.finishedScene.forEach(sceneNum => {
         const node = nodes[sceneNum - 1];
         if (node) {
@@ -67,7 +74,7 @@ function updateProgressUI() {
     });
 }
 
-// 完成某一幕
+// 完成某一幕（只保存数据，不更新UI）
 function completeScene(sceneNum) {
     if (!progressState.finishedScene.includes(sceneNum)) {
         progressState.finishedScene.push(sceneNum);
@@ -80,6 +87,10 @@ function completeScene(sceneNum) {
     }
 
     saveProgress(progressState);
+}
+
+// 上滑切换到下一幕时，浮现对应图标并更新进度栏
+function onSceneTransition(sceneNum) {
     updateProgressUI();
 }
 
@@ -106,6 +117,40 @@ function initProgressNodes() {
 function initProgress() {
     updateProgressUI();
     initProgressNodes();
+}
+
+// 显示重新开始确认弹窗
+function showRestartConfirm() {
+    document.getElementById('restart-modal').classList.add('show');
+}
+
+// 隐藏重新开始确认弹窗
+function hideRestartConfirm() {
+    document.getElementById('restart-modal').classList.remove('show');
+}
+
+// 确认重新开始
+function confirmRestart() {
+    hideRestartConfirm();
+
+    // 清空 localStorage 全部进度数据
+    progressState = getDefaultProgress();
+    saveProgress(progressState);
+
+    // 重置所有场景的初始化标志
+    scene2Initialized = false;
+    scene3Initialized = false;
+    scene4Initialized = false;
+    scene5Initialized = false;
+    scene6Initialized = false;
+    scene7Initialized = false;
+    scene8Initialized = false;
+
+    // 重置进度条UI
+    updateProgressUI();
+
+    // 平滑跳转至第一幕
+    switchToScene(1);
 }
 
 // 页面加载时初始化

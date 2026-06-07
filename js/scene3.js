@@ -200,7 +200,12 @@ function stabilizeScene3() {
         document.getElementById('swipe-3').classList.add('show');
         swipeEnabled = true;
     }, 2500);
-    // 不播放声音
+
+    // 交互完成后播放声音，同时背景音乐变小
+    playSound3();
+    if (bgmAudio) {
+        bgmAudio.volume = 0.2;
+    }
 
     // 标记第三幕完成
     completeScene(3);

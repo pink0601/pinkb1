@@ -26,3 +26,63 @@ body { font-family: "PingFang SC", "Microsoft YaHei", "Songti SC", "SimSun", ser
     pointer-events: none; z-index: 100; opacity: 0.06;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
 }
+
+/* ==================== 全局进度条 ==================== */
+#global-progress-bar {
+    position: fixed; top: 12px; left: 50%; transform: translateX(-50%);
+    width: auto; height: auto;
+    background: transparent;
+    z-index: 200;
+    display: flex; flex-direction: row; align-items: center;
+    padding: 0 16px;
+}
+
+#global-progress-fill {
+    display: none;
+}
+
+#global-progress-nodes {
+    display: flex; flex-direction: row; justify-content: center; align-items: center;
+    width: 100%; position: relative; z-index: 1;
+    gap: 16px;
+}
+
+.progress-node {
+    display: flex; flex-direction: column; align-items: center;
+    cursor: pointer; transition: all 0.3s ease;
+    position: relative;
+}
+
+.progress-node .node-lantern {
+    width: 28px; height: 48px;
+    opacity: 0.2; filter: grayscale(1) brightness(0.6);
+    transition: all 0.4s ease;
+    object-fit: contain;
+}
+
+/* 已完成 - 常亮暖光 */
+.progress-node.completed .node-lantern {
+    opacity: 1; filter: grayscale(0) brightness(1);
+    animation: none;
+}
+
+/* 当前高亮闪烁 */
+.progress-node.current .node-lantern {
+    opacity: 1; filter: grayscale(0) brightness(1);
+    animation: nodeBlink 1.5s ease-in-out infinite;
+}
+
+@keyframes nodeBlink {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.15); }
+}
+
+/* 未到达 - 灰色 */
+.progress-node.pending .node-lantern {
+    opacity: 0.15; filter: grayscale(1) brightness(0.5);
+}
+
+/* 节点悬停效果 */
+.progress-node:hover .node-lantern {
+    transform: scale(1.25);
+}

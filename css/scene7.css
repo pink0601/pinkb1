@@ -5,8 +5,8 @@
     background-size: cover; background-position: center; opacity: 0;
     transition: opacity 2s ease;
 }
-#bg-7-1 { background-image: url('../assets/images/7-2.png'); opacity: 1; }
-#bg-7-2 { background-image: url('../assets/images/7-1.png'); }
+#bg-7-1 { background-image: url('../assets/images/7-1.png'); opacity: 1; }
+#bg-7-2 { background-image: url('../assets/images/7-2.png'); }
 #bg-7-3 { background-image: url('../assets/images/7-3.png'); }
 
 #lantern-glow-7 {

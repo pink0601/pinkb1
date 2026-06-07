@@ -134,11 +134,19 @@ window.addEventListener('load', () => {
     document.body.style.fontFamily = '"PingFang SC", "Microsoft YaHei", "Songti SC", "SimSun", serif';
     enableGlobalSwipe();
 
-    // 刷新/重启：自动读取 localStorage，恢复至上次停留的幕
-    const savedScene = progressState.currentScene;
-    if (savedScene > 1) {
-        switchToScene(savedScene);
-    } else {
-        initScene1();
-    }
+    // 刷新页面：清空进度，从 Scene01 开始
+    progressState = getDefaultProgress();
+    saveProgress(progressState);
+    updateProgressUI();
+
+    // 重置所有场景的初始化标志
+    scene2Initialized = false;
+    scene3Initialized = false;
+    scene4Initialized = false;
+    scene5Initialized = false;
+    scene6Initialized = false;
+    scene7Initialized = false;
+    scene8Initialized = false;
+
+    initScene1();
 });

@@ -10,6 +10,7 @@ function initBGM() {
 
 function playBGM() {
     if (bgmAudio && bgmAudio.paused) {
+        bgmAudio.volume = 1;
         bgmAudio.play().catch(() => {});
     }
 }
@@ -22,8 +23,8 @@ function stopBGM() {
 }
 
 function updateBGM(sceneNum) {
-    // 第二幕到第七幕播放 BGM，其他幕停止
-    if (sceneNum >= 2 && sceneNum <= 7) {
+    // 第二幕到第四幕播放 BGM，其他幕停止
+    if (sceneNum >= 2 && sceneNum <= 4) {
         playBGM();
     } else {
         stopBGM();

@@ -1,12 +1,43 @@
 // 全局变量
 let currentScene = 1;
 let swipeEnabled = false;
+let bgmAudio = null;
+
+// 背景音乐控制
+function initBGM() {
+    bgmAudio = document.getElementById('bgm');
+}
+
+function playBGM() {
+    if (bgmAudio && bgmAudio.paused) {
+        bgmAudio.play().catch(() => {});
+    }
+}
+
+function stopBGM() {
+    if (bgmAudio) {
+        bgmAudio.pause();
+        bgmAudio.currentTime = 0;
+    }
+}
+
+function updateBGM(sceneNum) {
+    // 第二幕到第七幕播放 BGM，其他幕停止
+    if (sceneNum >= 2 && sceneNum <= 7) {
+        playBGM();
+    } else {
+        stopBGM();
+    }
+}
 
 function switchToScene(num) {
     document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
     document.getElementById('scene' + num).classList.add('active');
     currentScene = num;
     swipeEnabled = false;
+
+    // 更新背景音乐
+    updateBGM(num);
 
     // 检查是否是回看模式
     const reviewing = isReviewMode(num);
@@ -133,6 +164,7 @@ function goToNextScene() {
 window.addEventListener('load', () => {
     document.body.style.fontFamily = '"PingFang SC", "Microsoft YaHei", "Songti SC", "SimSun", serif';
     enableGlobalSwipe();
+    initBGM();
 
     // 刷新页面：清空进度，从 Scene01 初始状态开始
     progressState = getDefaultProgress();

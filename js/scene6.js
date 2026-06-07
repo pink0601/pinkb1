@@ -2,7 +2,7 @@
 let scene6Initialized = false;
 let gyroActive = false;
 let currentDirection = 'center'; // 'left', 'right', 'center'
-let isLocked = false; // 右侧错误锁定状态
+let isLocked = false; // 左侧错误锁定状态
 let pathCompleted = false;
 let baseGamma = 0;
 
@@ -72,7 +72,18 @@ function handleOrientation(event) {
     const CENTER_MIN = -8;        // 中间区域下限
     const CENTER_MAX = 8;         // 中间区域上限
 
-    // 方向判定 - 反向：右边为正确道路，左边为错误道路
+    if (isLocked) {
+        // 锁定状态：只能回中解锁
+        if (relativeGamma >= CENTER_MIN && relativeGamma <= CENTER_MAX) {
+            if (currentDirection !== 'center') {
+                currentDirection = 'center';
+                handleCenterPath();
+            }
+        }
+        return;
+    }
+
+    // 未锁定状态：正常方向判定
     if (relativeGamma < LEFT_THRESHOLD) {
         // 偏向左侧 - 错误道路
         if (currentDirection !== 'left') {
@@ -98,7 +109,8 @@ function handleOrientation(event) {
 function handleLeftPath() {
     document.getElementById('gyro-status').classList.add('error');
 
-    // 显示左侧背景 6-3.png
+    // 隐藏初始背景 6-1.png，显示左侧背景 6-3.png
+    document.getElementById('bg-6-initial').style.opacity = '0';
     document.getElementById('bg-6-left').style.opacity = '1';
     document.getElementById('bg-6-right').style.opacity = '0';
 
@@ -108,17 +120,12 @@ function handleLeftPath() {
     // 中央迷雾也加重
     document.getElementById('fog-center').style.opacity = '0.9';
 
-    // 锁定状态 - 仅监听回转角度
+    // 锁定状态 - 必须回中才能解锁
     isLocked = true;
 }
 
 // 处理右侧正确道路
 function handleRightPath() {
-    // 如果之前被锁定，先解锁
-    if (isLocked) {
-        isLocked = false;
-    }
-
     updateStatusText('发现道路！视野逐渐清晰');
 
     // 显示右侧背景 6-2.png
@@ -148,6 +155,14 @@ function handleRightPath() {
 // 处理中间位置（回退/重置）
 function handleCenterPath() {
     document.getElementById('gyro-status').classList.remove('error');
+
+    // 从错误状态回中：显示 6-1.png，解除锁定
+    if (isLocked) {
+        isLocked = false;
+        document.getElementById('bg-6-initial').style.opacity = '1';
+        document.getElementById('bg-6-left').style.opacity = '0';
+        document.getElementById('bg-6-right').style.opacity = '0';
+    }
 
     // 恢复迷雾状态
     document.getElementById('fog-right').classList.remove('thicken');

@@ -131,12 +131,5 @@ function goToNextScene() {
 window.addEventListener('load', () => {
     document.body.style.fontFamily = '"PingFang SC", "Microsoft YaHei", "Songti SC", "SimSun", serif';
     enableGlobalSwipe();
-
-    // 状态持久化：刷新后自动恢复至退出位置
-    const savedScene = progressState.currentScene;
-    if (savedScene > 1) {
-        switchToScene(savedScene);
-    } else {
-        initScene1();
-    }
+    initScene1();
 });

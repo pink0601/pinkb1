@@ -149,8 +149,9 @@ function confirmRestart() {
     // 重置进度条UI
     updateProgressUI();
 
-    // 平滑跳转至第一幕
-    switchToScene(1);
+    // 隐藏所有场景，只显示第一幕初始状态
+    document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
+    initScene1();
 }
 
 // 页面加载时初始化

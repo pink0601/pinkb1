@@ -151,6 +151,9 @@ function initScene4() {
         // 停止零星细雨动画
         document.getElementById('rain-container-4').classList.add('cleared');
 
+        // 标记第四幕完成
+        completeScene(4);
+
         // 显示台词弹窗
         setTimeout(() => showDialogue4(), 800);
     }

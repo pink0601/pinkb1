@@ -4,21 +4,63 @@ let swipeEnabled = false;
 let bgmAudio = null;
 
 // 背景音乐控制
+let bgmFadeInterval = null;
+
 function initBGM() {
     bgmAudio = document.getElementById('bgm');
 }
 
+function fadeInBGM(duration, targetVolume) {
+    if (!bgmAudio) return;
+    clearInterval(bgmFadeInterval);
+    bgmAudio.volume = 0;
+    bgmAudio.play().catch(() => {});
+    const steps = 30;
+    const stepTime = duration / steps;
+    const volumeStep = targetVolume / steps;
+    let current = 0;
+    bgmFadeInterval = setInterval(() => {
+        current += volumeStep;
+        if (current >= targetVolume) {
+            bgmAudio.volume = targetVolume;
+            clearInterval(bgmFadeInterval);
+        } else {
+            bgmAudio.volume = current;
+        }
+    }, stepTime);
+}
+
+function fadeOutBGM(duration) {
+    if (!bgmAudio) return;
+    clearInterval(bgmFadeInterval);
+    const startVolume = bgmAudio.volume;
+    if (startVolume <= 0) { bgmAudio.pause(); bgmAudio.currentTime = 0; return; }
+    const steps = 30;
+    const stepTime = duration / steps;
+    const volumeStep = startVolume / steps;
+    let current = startVolume;
+    bgmFadeInterval = setInterval(() => {
+        current -= volumeStep;
+        if (current <= 0) {
+            bgmAudio.volume = 0;
+            bgmAudio.pause();
+            bgmAudio.currentTime = 0;
+            clearInterval(bgmFadeInterval);
+        } else {
+            bgmAudio.volume = current;
+        }
+    }, stepTime);
+}
+
 function playBGM() {
     if (bgmAudio && bgmAudio.paused) {
-        bgmAudio.volume = 1;
-        bgmAudio.play().catch(() => {});
+        fadeInBGM(1500, 1);
     }
 }
 
 function stopBGM() {
-    if (bgmAudio) {
-        bgmAudio.pause();
-        bgmAudio.currentTime = 0;
+    if (bgmAudio && !bgmAudio.paused) {
+        fadeOutBGM(1500);
     }
 }
 

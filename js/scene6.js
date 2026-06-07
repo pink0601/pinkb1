@@ -182,15 +182,6 @@ function startBrightnessAnimation() {
         document.getElementById('bg-6-seq3').style.opacity = '1';
     }, 1200);
 
-    // 夜色蒙版逐层渐隐 - 画面亮度逐渐提高
-    setTimeout(() => {
-        document.getElementById('night-mask-layer1').classList.add('fade-out');
-    }, 300);
-
-    setTimeout(() => {
-        document.getElementById('night-mask-layer2').classList.add('fade-out');
-    }, 600);
-
     // 中央迷雾消散
     setTimeout(() => {
         document.getElementById('fog-center').style.opacity = '0';

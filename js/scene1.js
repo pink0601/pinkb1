@@ -5,11 +5,35 @@ let scene1StartTime = 0;
 const scene1RequiredTime = 1500; // 长按所需时间 1.5秒
 
 function initScene1() {
-    setTimeout(() => document.getElementById('scene1').classList.add('active'), 100);
+    // 重置第一幕所有状态
+    scene1Progress = 0;
+    scene1StartTime = 0;
+    if (scene1AnimFrame) cancelAnimationFrame(scene1AnimFrame);
+    
+    const scene1 = document.getElementById('scene1');
+    scene1.classList.remove('lit-up');
+    setTimeout(() => scene1.classList.add('active'), 100);
+    
     const hitArea = document.getElementById('hit-area');
+    hitArea.classList.remove('active');
+    
     const progressBar = document.getElementById('progress-bar');
+    progressBar.style.width = '0%';
+    progressBar.style.boxShadow = '0 0 0px rgba(255, 180, 100, 0)';
+    
     const progressContainer = document.getElementById('progress-container');
+    progressContainer.style.display = 'block';
+    progressContainer.style.opacity = '0';
+    
     const hintText = document.querySelector('#scene1 .hint-text');
+    hintText.style.display = 'block';
+    
+    document.getElementById('swipe-1').classList.remove('show');
+    swipeEnabled = false;
+    
+    // 恢复马灯呼吸动画
+    const lanternCore = document.querySelector('.lantern-core');
+    if (lanternCore) lanternCore.style.animationPlayState = 'running';
     
     function startPress(e) {
         e.preventDefault();

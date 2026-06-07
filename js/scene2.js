@@ -263,6 +263,10 @@ function triggerScene2Clear() {
     document.getElementById('fog-progress').style.opacity = '0';
     document.getElementById('clear-percent').style.opacity = '0';
     document.getElementById('guide-text').classList.remove('show');
+
+    // 标记第二幕完成
+    completeScene(2);
+
     setTimeout(() => showScene2Text(), 500);
 }
 

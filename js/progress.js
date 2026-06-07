@@ -119,40 +119,5 @@ function initProgress() {
     initProgressNodes();
 }
 
-// 显示重新开始确认弹窗
-function showRestartConfirm() {
-    document.getElementById('restart-modal').classList.add('show');
-}
-
-// 隐藏重新开始确认弹窗
-function hideRestartConfirm() {
-    document.getElementById('restart-modal').classList.remove('show');
-}
-
-// 确认重新开始
-function confirmRestart() {
-    hideRestartConfirm();
-
-    // 清空 localStorage 全部进度数据
-    progressState = getDefaultProgress();
-    saveProgress(progressState);
-
-    // 重置所有场景的初始化标志
-    scene2Initialized = false;
-    scene3Initialized = false;
-    scene4Initialized = false;
-    scene5Initialized = false;
-    scene6Initialized = false;
-    scene7Initialized = false;
-    scene8Initialized = false;
-
-    // 重置进度条UI
-    updateProgressUI();
-
-    // 隐藏所有场景，只显示第一幕初始状态
-    document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
-    initScene1();
-}
-
 // 页面加载时初始化
 window.addEventListener('load', initProgress);

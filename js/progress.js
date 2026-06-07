@@ -53,6 +53,18 @@ function updateProgressUI() {
             node.classList.add('pending');
         }
     });
+
+    // 已完成的幕显示图标（从 pending 变为 completed 时触发动画）
+    progressState.finishedScene.forEach(sceneNum => {
+        const node = nodes[sceneNum - 1];
+        if (node) {
+            const img = node.querySelector('.node-lantern');
+            if (img) {
+                img.style.opacity = '1';
+                img.style.transform = 'scale(1)';
+            }
+        }
+    });
 }
 
 // 完成某一幕

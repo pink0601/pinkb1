@@ -187,6 +187,9 @@ function startBrightnessAnimation() {
         document.getElementById('fog-center').style.opacity = '0';
     }, 500);
 
+    // 标记第六幕完成
+    completeScene(6);
+
     // 显示台词弹窗
     setTimeout(() => showDialogue6(), 2500);
 }

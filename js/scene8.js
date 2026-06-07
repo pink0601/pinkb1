@@ -47,6 +47,9 @@ function showResult() {
     document.getElementById('characterName').textContent = currentCharacter.name;
     document.getElementById('characterSlogan').textContent = currentCharacter.slogan;
     document.getElementById('resultModal').classList.add('active');
+
+    // 标记第八幕完成
+    completeScene(8);
 }
 
 function closeResult() {

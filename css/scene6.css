@@ -8,7 +8,7 @@
     opacity: 0; transition: opacity 1.5s ease;
 }
 /* 初始显示 6-1.png */
-#bg-6-initial { background-image: url('../assets/images/6-1.png'); }
+#bg-6-initial { background-image: url('../assets/images/6-1.png'); opacity: 1; }
 /* 向右倾斜显示 6-2.png */
 #bg-6-right { background-image: url('../assets/images/6-2.png'); }
 /* 向左倾斜显示 6-3.png */
@@ -27,9 +27,9 @@
 /* 左侧迷雾 - 初始较浓，正确选择后消散 */
 #fog-left {
     background: radial-gradient(ellipse at 30% 50%,
-        rgba(20, 25, 40, 0.72) 0%,
-        rgba(15, 20, 35, 0.64) 30%,
-        rgba(25, 30, 45, 0.42) 60%,
+        rgba(20, 25, 40, 0.576) 0%,
+        rgba(15, 20, 35, 0.512) 30%,
+        rgba(25, 30, 45, 0.336) 60%,
         transparent 85%);
     z-index: 15;
 }
@@ -41,56 +41,32 @@
 /* 右侧迷雾 - 初始较浓，选择后加厚锁定 */
 #fog-right {
     background: radial-gradient(ellipse at 70% 50%,
-        rgba(20, 25, 40, 0.72) 0%,
-        rgba(15, 20, 35, 0.64) 30%,
-        rgba(25, 30, 45, 0.42) 60%,
+        rgba(20, 25, 40, 0.576) 0%,
+        rgba(15, 20, 35, 0.512) 30%,
+        rgba(25, 30, 45, 0.336) 60%,
         transparent 85%);
     z-index: 15;
 }
 #fog-right.thicken {
     background: radial-gradient(ellipse at 70% 50%,
-        rgba(10, 15, 25, 0.98) 0%,
-        rgba(8, 12, 22, 0.95) 25%,
-        rgba(15, 20, 35, 0.9) 55%,
-        rgba(20, 25, 40, 0.7) 80%);
+        rgba(10, 15, 25, 0.784) 0%,
+        rgba(8, 12, 22, 0.76) 25%,
+        rgba(15, 20, 35, 0.72) 55%,
+        rgba(20, 25, 40, 0.56) 80%);
     opacity: 1;
 }
 
 /* 中央迷雾 - 基础遮罩 */
 #fog-center {
     background: radial-gradient(ellipse at 50% 50%,
-        rgba(15, 20, 30, 0.6) 0%,
-        rgba(20, 25, 40, 0.42) 40%,
-        rgba(25, 30, 45, 0.25) 70%,
+        rgba(15, 20, 30, 0.48) 0%,
+        rgba(20, 25, 40, 0.336) 40%,
+        rgba(25, 30, 45, 0.2) 70%,
         transparent 100%);
     z-index: 14;
 }
 
-/* 夜色蒙版 - 多层渐变（降低初始暗度） */
-#night-mask-layer1, #night-mask-layer2 {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    pointer-events: none;
-}
-#night-mask-layer1 {
-    background: linear-gradient(to bottom,
-        rgba(5, 5, 15, 0.42) 0%,
-        rgba(8, 10, 22, 0.3) 50%,
-        rgba(12, 15, 30, 0.17) 100%);
-    z-index: 20;
-    opacity: 1;
-    transition: opacity 2s ease;
-}
-#night-mask-layer2 {
-    background: radial-gradient(ellipse at 50% 30%,
-        rgba(10, 15, 30, 0.21) 0%,
-        transparent 60%);
-    z-index: 21;
-    opacity: 1;
-    transition: opacity 2.5s ease 0.3s;
-}
-#night-mask-layer1.fade-out, #night-mask-layer2.fade-out {
-    opacity: 0;
-}
+/* 夜色蒙版已删除 */
 
 /* 方向指示器 */
 #direction-indicator {

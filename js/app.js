@@ -134,7 +134,7 @@ window.addEventListener('load', () => {
     document.body.style.fontFamily = '"PingFang SC", "Microsoft YaHei", "Songti SC", "SimSun", serif';
     enableGlobalSwipe();
 
-    // 刷新页面：清空进度，从 Scene01 开始
+    // 刷新页面：清空进度，从 Scene01 初始状态开始
     progressState = getDefaultProgress();
     saveProgress(progressState);
     updateProgressUI();
@@ -147,6 +147,9 @@ window.addEventListener('load', () => {
     scene6Initialized = false;
     scene7Initialized = false;
     scene8Initialized = false;
+
+    // 隐藏所有场景，只显示第一幕
+    document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
 
     initScene1();
 });

@@ -60,7 +60,10 @@ function initScene1() {
         document.getElementById('scene1').classList.add('lit-up');
         hintText.style.display = 'none';
         progressContainer.style.display = 'none';
-        
+
+        // 标记第一幕完成
+        completeScene(1);
+
         // 长按完成后，显示上滑提示，等待用户上滑进入第二幕
         setTimeout(() => {
             document.getElementById('swipe-1').classList.add('show');

@@ -54,8 +54,16 @@ function triggerScene5End() {
     dialoguePhase = 4;
     document.getElementById('bg-layer-5-after').style.opacity = '1';
     // 不播放声音
+
+    // 标记第五幕完成
+    completeScene(5);
+
     setTimeout(() => {
         document.getElementById('swipe-5').classList.add('show');
         swipeEnabled = true;
     }, 2500);
+}
+
+function playSound5() {
+    // 声音已关闭
 }

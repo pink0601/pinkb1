@@ -55,19 +55,6 @@ function updateProgressUI() {
     });
 }
 
-// 浮现指定幕的图标（带动画）
-function revealNode(sceneNum) {
-    const nodes = document.querySelectorAll('.progress-node');
-    const node = nodes[sceneNum - 1];
-    if (!node) return;
-    
-    const img = node.querySelector('.node-lantern');
-    if (img) {
-        img.style.opacity = '1';
-        img.style.transform = 'scale(1)';
-    }
-}
-
 // 完成某一幕（只保存数据，不更新UI）
 function completeScene(sceneNum) {
     if (!progressState.finishedScene.includes(sceneNum)) {

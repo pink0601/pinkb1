@@ -82,6 +82,9 @@ function switchToScene(num) {
     // 更新背景音乐
     updateBGM(num);
 
+    // 浮现当前幕对应的进度栏图标
+    revealNode(num);
+
     // 检查是否是回看模式
     const reviewing = isReviewMode(num);
 
@@ -194,8 +197,7 @@ function enableGlobalSwipe() {
 
 function goToNextScene() {
     if (currentScene < 8) {
-        // 上滑完成，浮现当前幕对应的进度栏图标
-        onSceneTransition(currentScene);
+        // 上滑切换到下一幕，图标保持不动
         switchToScene(currentScene + 1);
     } else {
         document.body.style.opacity = '0';

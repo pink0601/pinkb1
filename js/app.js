@@ -259,4 +259,7 @@ window.addEventListener('load', () => {
     document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
 
     initScene1();
+
+    // 浮现第一幕图标
+    revealNode(1);
 });

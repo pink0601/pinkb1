@@ -64,11 +64,41 @@ function stopBGM() {
     }
 }
 
+// 背景音乐逐渐降低（不暂停，持续播放但音量渐小）
+function fadeBGMDown(duration, targetVolume) {
+    if (!bgmAudio || bgmAudio.paused) return;
+    clearInterval(bgmFadeInterval);
+    const startVolume = bgmAudio.volume;
+    if (startVolume <= targetVolume) return;
+    const steps = 40;
+    const stepTime = duration / steps;
+    const volumeStep = (startVolume - targetVolume) / steps;
+    let current = startVolume;
+    bgmFadeInterval = setInterval(() => {
+        current -= volumeStep;
+        if (current <= targetVolume) {
+            bgmAudio.volume = targetVolume;
+            clearInterval(bgmFadeInterval);
+        } else {
+            bgmAudio.volume = current;
+        }
+    }, stepTime);
+}
+
 function updateBGM(sceneNum) {
-    // 第二幕到第四幕播放 BGM，其他幕停止
-    if (sceneNum >= 2 && sceneNum <= 4) {
-        playBGM();
-    } else {
+    // 第二幕到第三幕播放 BGM
+    if (sceneNum === 2 || sceneNum === 3) {
+        if (bgmAudio && bgmAudio.paused) {
+            playBGM();
+        }
+    }
+    // 第四幕：不重新播放，让第三幕的渐低音量自然衔接
+    // 离开第四幕（进入第五幕）时淡出
+    if (sceneNum === 5) {
+        stopBGM();
+    }
+    // 第一幕和第八幕停止
+    if (sceneNum === 1 || sceneNum === 8) {
         stopBGM();
     }
 }

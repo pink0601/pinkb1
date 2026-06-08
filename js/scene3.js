@@ -201,14 +201,29 @@ function stabilizeScene3() {
         swipeEnabled = true;
     }, 2500);
 
-    // 交互完成后播放声音，同时背景音乐变小
+    // 交互完成后播放声音，同时背景音乐逐渐变小
     playSound3();
-    if (bgmAudio) {
-        bgmAudio.volume = 0.2;
-    }
+    fadeBGMDown(3000, 0.1);
 
     // 标记第三幕完成
     completeScene(3);
 }
 
-
+function playSound3() {
+    try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        [392, 493.88, 587.33].forEach((freq, index) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.05, audioCtx.currentTime + 0.5);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 2);
+            osc.start(audioCtx.currentTime);
+            osc.stop(audioCtx.currentTime + 2);
+        });
+    } catch (e) {}
+}

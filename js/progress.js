@@ -29,7 +29,7 @@ function saveProgress(progress) {
 // 全局进度状态
 let progressState = loadProgress();
 
-// 更新进度条UI
+// 更新进度条UI（静默更新，不触发动画）
 function updateProgressUI() {
     const nodes = document.querySelectorAll('.progress-node');
     const fill = document.getElementById('global-progress-fill');
@@ -43,13 +43,6 @@ function updateProgressUI() {
         const sceneNum = index + 1;
         node.classList.remove('completed', 'current', 'pending');
 
-        // 清除 inline style，确保 CSS 类控制显示
-        const img = node.querySelector('.node-lantern');
-        if (img) {
-            img.style.opacity = '';
-            img.style.transform = '';
-        }
-
         if (progressState.finishedScene.includes(sceneNum)) {
             node.classList.add('completed');
         } else if (sceneNum === progressState.currentScene) {
@@ -60,18 +53,19 @@ function updateProgressUI() {
             node.classList.add('pending');
         }
     });
+}
 
-    // 已完成的幕显示图标
-    progressState.finishedScene.forEach(sceneNum => {
-        const node = nodes[sceneNum - 1];
-        if (node) {
-            const img = node.querySelector('.node-lantern');
-            if (img) {
-                img.style.opacity = '1';
-                img.style.transform = 'scale(1)';
-            }
-        }
-    });
+// 浮现指定幕的图标（带动画）
+function revealNode(sceneNum) {
+    const nodes = document.querySelectorAll('.progress-node');
+    const node = nodes[sceneNum - 1];
+    if (!node) return;
+    
+    const img = node.querySelector('.node-lantern');
+    if (img) {
+        img.style.opacity = '1';
+        img.style.transform = 'scale(1)';
+    }
 }
 
 // 完成某一幕（只保存数据，不更新UI）
@@ -89,10 +83,7 @@ function completeScene(sceneNum) {
     saveProgress(progressState);
 }
 
-// 上滑切换到下一幕时，浮现对应图标并更新进度栏
-function onSceneTransition(sceneNum) {
-    updateProgressUI();
-}
+
 
 // 检查是否是回看模式
 function isReviewMode(sceneNum) {

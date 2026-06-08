@@ -201,8 +201,7 @@ function stabilizeScene3() {
         swipeEnabled = true;
     }, 2500);
 
-    // 交互完成后播放声音，同时背景音乐逐渐变小
-    playSound3();
+    // 交互完成后背景音乐逐渐变小（不播放其他声音）
     fadeBGMDown(3000, 0.1);
 
     // 标记第三幕完成

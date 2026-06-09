@@ -112,9 +112,6 @@ function switchToScene(num) {
     // 更新背景音乐
     updateBGM(num);
 
-    // 浮现当前幕对应的进度栏图标
-    revealNode(num);
-
     // 检查是否是回看模式
     const reviewing = isReviewMode(num);
 
@@ -244,7 +241,6 @@ window.addEventListener('load', () => {
     // 刷新页面：清空进度，从 Scene01 初始状态开始
     progressState = getDefaultProgress();
     saveProgress(progressState);
-    updateProgressUI();
 
     // 重置所有场景的初始化标志
     scene2Initialized = false;
@@ -259,7 +255,4 @@ window.addEventListener('load', () => {
     document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
 
     initScene1();
-
-    // 浮现第一幕图标
-    revealNode(1);
 });

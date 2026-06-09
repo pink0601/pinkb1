@@ -40,10 +40,12 @@
 
 #hint-text-3 {
     position: absolute; bottom: 8%; left: 50%; transform: translateX(-50%);
-    color: rgba(200, 195, 180, 0.4); font-size: 13px; z-index: 40;
+    color: rgba(220, 215, 200, 0.85); font-size: 16px; z-index: 40;
     white-space: nowrap; animation: hintBreathe 2.5s ease-in-out infinite;
+    font-weight: 500; letter-spacing: 1px;
+    text-shadow: 0 0 12px rgba(255, 200, 100, 0.3);
 }
-@keyframes hintBreathe { 0%, 100% { opacity: 0.25; } 50% { opacity: 0.5; } }
+@keyframes hintBreathe { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
 
 .shake { animation: shakeIntense 0.1s ease-in-out infinite; }
 .shake-moderate { animation: shakeModerate 0.15s ease-in-out infinite; }

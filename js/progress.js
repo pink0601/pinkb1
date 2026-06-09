@@ -55,18 +55,8 @@ function updateProgressUI() {
     });
 }
 
-// 浮现指定幕的图标
+// 浮现指定幕的图标（更新进度栏UI，让CSS类控制显示）
 function revealNode(sceneNum) {
-    const nodes = document.querySelectorAll('.progress-node');
-    const node = nodes[sceneNum - 1];
-    if (!node) return;
-    const img = node.querySelector('.node-lantern');
-    if (img) {
-        img.style.opacity = '';
-        img.style.transform = '';
-    }
-    node.classList.remove('pending');
-    node.classList.add('current');
     updateProgressUI();
 }
 

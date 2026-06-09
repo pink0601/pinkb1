@@ -56,10 +56,12 @@
     pointer-events: none;
 }
 #scene1 .hint-text {
-    font-size: 14px; color: rgba(200, 195, 180, 0.4); margin-bottom: 12px; letter-spacing: 1px;
+    font-size: 16px; color: rgba(220, 215, 200, 0.8); margin-bottom: 12px; letter-spacing: 1px;
     animation: pulse-hint 2.5s ease-in-out infinite;
+    font-weight: 500;
+    text-shadow: 0 0 12px rgba(255, 200, 100, 0.3);
 }
-@keyframes pulse-hint { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.6; } }
+@keyframes pulse-hint { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
 
 #progress-container {
     width: 140px; height: 3px; background: rgba(255,255,255,0.1);

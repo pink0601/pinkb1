@@ -31,11 +31,13 @@
 
 #click-hint-7 {
     position: absolute; bottom: 12%; left: 50%; transform: translateX(-50%);
-    color: rgba(200, 195, 180, 0.4); font-size: 14px; z-index: 50;
+    color: rgba(220, 215, 200, 0.85); font-size: 16px; z-index: 50;
     white-space: nowrap; opacity: 0; animation: breatheHint7 2.5s ease-in-out infinite;
+    font-weight: 500; letter-spacing: 1px;
+    text-shadow: 0 0 12px rgba(255, 200, 100, 0.3);
 }
 #click-hint-7.show { opacity: 1; }
-@keyframes breatheHint7 { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.55; } }
+@keyframes breatheHint7 { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
 
 #dialogue-box-7 {
     position: absolute; bottom: 24%; left: 50%; transform: translateX(-50%) scale(0);

@@ -55,6 +55,21 @@ function updateProgressUI() {
     });
 }
 
+// 浮现指定幕的图标
+function revealNode(sceneNum) {
+    const nodes = document.querySelectorAll('.progress-node');
+    const node = nodes[sceneNum - 1];
+    if (!node) return;
+    const img = node.querySelector('.node-lantern');
+    if (img) {
+        img.style.opacity = '';
+        img.style.transform = '';
+    }
+    node.classList.remove('pending');
+    node.classList.add('current');
+    updateProgressUI();
+}
+
 // 完成某一幕（只保存数据，不更新UI）
 function completeScene(sceneNum) {
     if (!progressState.finishedScene.includes(sceneNum)) {
@@ -70,13 +85,9 @@ function completeScene(sceneNum) {
     saveProgress(progressState);
 }
 
-
-
 // 检查是否是回看模式
 function isReviewMode(sceneNum) {
-    const result = progressState.finishedScene.includes(sceneNum);
-    console.log('isReviewMode', sceneNum, ':', result, 'finishedScene:', progressState.finishedScene);
-    return result;
+    return progressState.finishedScene.includes(sceneNum);
 }
 
 // 节点点击事件

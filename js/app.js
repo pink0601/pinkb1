@@ -112,6 +112,9 @@ function switchToScene(num) {
     // 更新背景音乐
     updateBGM(num);
 
+    // 浮现当前幕对应的进度栏图标
+    revealNode(num);
+
     // 检查是否是回看模式
     const reviewing = isReviewMode(num);
 
@@ -119,7 +122,6 @@ function switchToScene(num) {
         if (reviewing) { showScene1Completed(); } else { initScene1(); }
     }
     if (num === 2) {
-        console.log('switchToScene 2, reviewing:', reviewing);
         if (reviewing) { showScene2Completed(); } else { initScene2(); }
     }
     if (num === 3) {
@@ -257,4 +259,7 @@ window.addEventListener('load', () => {
     document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
 
     initScene1();
+
+    // 浮现第一幕图标
+    revealNode(1);
 });

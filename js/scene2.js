@@ -7,8 +7,10 @@ let fogCanvas, fogCtx, waterCanvas, waterCtx;
 let waterDrops = [];
 
 function initScene2() {
+    console.log('initScene2 called, scene2Initialized:', scene2Initialized);
     if (scene2Initialized) return;
     scene2Initialized = true;
+    console.log('initScene2 running');
 
     fogCanvas = document.getElementById('fog-canvas');
     fogCtx = fogCanvas.getContext('2d');

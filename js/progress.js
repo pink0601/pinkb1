@@ -74,7 +74,9 @@ function completeScene(sceneNum) {
 
 // 检查是否是回看模式
 function isReviewMode(sceneNum) {
-    return progressState.finishedScene.includes(sceneNum);
+    const result = progressState.finishedScene.includes(sceneNum);
+    console.log('isReviewMode', sceneNum, ':', result, 'finishedScene:', progressState.finishedScene);
+    return result;
 }
 
 // 节点点击事件

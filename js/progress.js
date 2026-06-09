@@ -1,4 +1,4 @@
-// ==================== 全局进度条系统 ====================
+// ==================== 全局进度系统 ====================
 const PROGRESS_KEY = 'lantern_story_progress';
 
 // 默认进度状态
@@ -29,38 +29,7 @@ function saveProgress(progress) {
 // 全局进度状态
 let progressState = loadProgress();
 
-// 更新进度条UI（静默更新，不触发动画）
-function updateProgressUI() {
-    const nodes = document.querySelectorAll('.progress-node');
-    const fill = document.getElementById('global-progress-fill');
-
-    // 计算进度百分比
-    const completedCount = progressState.finishedScene.length;
-    const percent = (completedCount / 8) * 100;
-    fill.style.height = percent + '%';
-
-    nodes.forEach((node, index) => {
-        const sceneNum = index + 1;
-        node.classList.remove('completed', 'current', 'pending');
-
-        if (progressState.finishedScene.includes(sceneNum)) {
-            node.classList.add('completed');
-        } else if (sceneNum === progressState.currentScene) {
-            node.classList.add('current');
-        } else if (sceneNum < progressState.currentScene) {
-            node.classList.add('completed');
-        } else {
-            node.classList.add('pending');
-        }
-    });
-}
-
-// 浮现指定幕的图标（更新进度栏UI，让CSS类控制显示）
-function revealNode(sceneNum) {
-    updateProgressUI();
-}
-
-// 完成某一幕（只保存数据，不更新UI）
+// 完成某一幕（保存数据）
 function completeScene(sceneNum) {
     if (!progressState.finishedScene.includes(sceneNum)) {
         progressState.finishedScene.push(sceneNum);
@@ -79,26 +48,3 @@ function completeScene(sceneNum) {
 function isReviewMode(sceneNum) {
     return progressState.finishedScene.includes(sceneNum);
 }
-
-// 节点点击事件
-function initProgressNodes() {
-    const nodes = document.querySelectorAll('.progress-node');
-    nodes.forEach(node => {
-        node.addEventListener('click', () => {
-            const sceneNum = parseInt(node.dataset.scene);
-            // 已完成或当前幕可点击，未解锁不可点击
-            if (progressState.finishedScene.includes(sceneNum) || sceneNum === progressState.currentScene) {
-                switchToScene(sceneNum);
-            }
-        });
-    });
-}
-
-// 初始化进度条
-function initProgress() {
-    updateProgressUI();
-    initProgressNodes();
-}
-
-// 页面加载时初始化
-window.addEventListener('load', initProgress);

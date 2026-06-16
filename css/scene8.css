@@ -280,13 +280,15 @@
 .match-btn:active { transform: scale(0.97); }
 
 .match-close {
-    position: absolute; top: 20px; right: 20px;
-    width: 40px; height: 40px;
-    background: transparent;
-    border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 50%;
-    color: rgba(255, 215, 0, 0.6); font-size: 20px;
+    position: fixed; top: 20px; right: 20px;
+    width: 44px; height: 44px;
+    background: rgba(20, 20, 20, 0.9);
+    border: 1px solid rgba(255, 215, 0, 0.4); border-radius: 50%;
+    color: rgba(255, 215, 0, 0.8); font-size: 22px;
     cursor: pointer; display: flex;
     align-items: center; justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(4px);
 }
 
 .close-result {

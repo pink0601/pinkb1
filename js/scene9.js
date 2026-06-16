@@ -61,6 +61,14 @@ function startGyro9Listener() {
 
     // 启动动画循环
     startAnimationLoop9();
+
+    // 8秒后自动完成
+    setTimeout(() => {
+        if (gyro9Active) {
+            showStatus9('马灯已照亮前路');
+            setTimeout(completeScene9, 1500);
+        }
+    }, 8000);
 }
 
 // 校准初始方向
@@ -111,8 +119,7 @@ function startAnimationLoop9() {
         currentX += (targetX - currentX) * EASE_FACTOR;
 
         // 应用变换（手部马灯联动单元整体移动）
-        const transform = `translateX(calc(-50% + ${currentX}px))`;
-        handUnit.style.transform = transform;
+        handUnit.style.transform = `translateX(${currentX}px)`;
 
         // 光斑同步移动（相对马灯位置）
         const spotX = 50 + (currentX / window.innerWidth) * 30;
@@ -139,7 +146,7 @@ function showStatus9(text, isError) {
     }
 }
 
-// 完成第九幕（点击上滑或自动完成）
+// 完成第九幕
 function completeScene9() {
     gyro9Active = false;
     if (animFrame9) cancelAnimationFrame(animFrame9);

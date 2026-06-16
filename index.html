@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="css/scene6.css">
     <link rel="stylesheet" href="css/scene7.css">
     <link rel="stylesheet" href="css/scene8.css">
+    <link rel="stylesheet" href="css/scene9.css">
 </head>
 <body>
     <div class="texture-overlay"></div>
@@ -21,21 +22,6 @@
     <audio id="bgm" loop preload="auto">
         <source src="assets/audio/bgm.mp3" type="audio/mpeg">
     </audio>
-
-    <!-- 全局进度条 -->
-    <div id="global-progress-bar">
-        <div id="global-progress-fill"></div>
-        <div id="global-progress-nodes">
-            <div class="progress-node" data-scene="1"><img class="node-lantern" src="assets/images/8-11.png" alt="1"></div>
-            <div class="progress-node" data-scene="2"><img class="node-lantern" src="assets/images/8-11.png" alt="2"></div>
-            <div class="progress-node" data-scene="3"><img class="node-lantern" src="assets/images/8-11.png" alt="3"></div>
-            <div class="progress-node" data-scene="4"><img class="node-lantern" src="assets/images/8-11.png" alt="4"></div>
-            <div class="progress-node" data-scene="5"><img class="node-lantern" src="assets/images/8-11.png" alt="5"></div>
-            <div class="progress-node" data-scene="6"><img class="node-lantern" src="assets/images/8-11.png" alt="6"></div>
-            <div class="progress-node" data-scene="7"><img class="node-lantern" src="assets/images/8-11.png" alt="7"></div>
-            <div class="progress-node" data-scene="8"><img class="node-lantern" src="assets/images/8-11.png" alt="8"></div>
-        </div>
-    </div>
 
     <!-- 第一幕：封面 -->
     <div id="scene1" class="scene">
@@ -299,6 +285,31 @@
         <div class="toast-8" id="toast8"></div>
     </div>
 
+    <!-- 第九幕：提灯寻路（陀螺仪控制手部马灯联动） -->
+    <div id="scene9" class="scene">
+        <!-- 背景：6-1.png -->
+        <div class="bg-image-9"></div>
+
+        <!-- 光斑层：随马灯同步移动 -->
+        <div class="light-spot" id="light-spot-9"></div>
+
+        <!-- 手部马灯联动单元：1111.png -->
+        <div class="hand-lantern-unit" id="hand-lantern-9">
+            <img src="assets/images/1111.png" alt="手部马灯" class="hand-lantern-img">
+        </div>
+
+        <!-- 引导提示 -->
+        <div class="guide-hint-9" id="guide-hint-9">
+            左右倾斜手机，让马灯照亮前路
+        </div>
+
+        <!-- 状态提示 -->
+        <div class="status-hint-9" id="status-hint-9"></div>
+
+        <!-- 上滑提示 -->
+        <div class="swipe-hint" id="swipe-9">↑ 上滑进入下一幕</div>
+    </div>
+
     <script src="js/progress.js"></script>
     <script src="js/scene1.js"></script>
     <script src="js/scene2.js"></script>
@@ -308,6 +319,7 @@
     <script src="js/scene6.js"></script>
     <script src="js/scene7.js"></script>
     <script src="js/scene8.js"></script>
+    <script src="js/scene9.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

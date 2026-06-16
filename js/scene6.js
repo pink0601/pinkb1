@@ -6,15 +6,6 @@ let isLocked = false; // 左侧错误锁定状态
 let pathCompleted = false;
 let baseGamma = 0;
 
-// 马灯动画参数
-let lanternAnimFrame = null;
-let lanternCurrentX = 0;
-let lanternTargetX = 0;
-let lanternCurrentScaleY = 1;
-let lanternTargetScaleY = 1;
-const LANTERN_EASE = 0.08;
-const LANTERN_MAX_OFFSET = 80;
-
 function initScene6() {
     if (scene6Initialized) return;
     scene6Initialized = true;
@@ -61,12 +52,6 @@ function startGyroListener() {
         document.getElementById('gyro-guide').classList.remove('show');
         updateStatusText('左右倾斜手机探寻前路');
     }, 2500);
-
-    // 显示马灯
-    document.getElementById('hand-lantern-6').classList.add('show');
-
-    // 启动马灯动画循环
-    startLanternAnimation();
 }
 
 // 校准初始方向
@@ -86,9 +71,6 @@ function handleOrientation(event) {
     const RIGHT_THRESHOLD = 12;   // 向右倾斜12度触发右侧
     const CENTER_MIN = -8;        // 中间区域下限
     const CENTER_MAX = 8;         // 中间区域上限
-
-    // 更新马灯目标位置和形变
-    updateLanternTarget(relativeGamma);
 
     if (isLocked) {
         // 锁定状态：只能回中解锁
@@ -121,43 +103,6 @@ function handleOrientation(event) {
             handleCenterPath();
         }
     }
-}
-
-// 更新马灯目标位置和形变
-function updateLanternTarget(relativeGamma) {
-    // 计算水平偏移（反向：手机左倾，马灯右移贴近右边框）
-    // relativeGamma < 0 (左倾) -> 马灯向右移动
-    // relativeGamma > 0 (右倾) -> 马灯向左移动
-    lanternTargetX = -relativeGamma * 3;
-    lanternTargetX = Math.max(-LANTERN_MAX_OFFSET, Math.min(LANTERN_MAX_OFFSET, lanternTargetX));
-
-    // 计算形变：左倾（向右移）时回缩，右倾（向左移）时伸长
-    // relativeGamma < 0 (左倾/向右移) -> scaleY < 1 (回缩)
-    // relativeGamma > 0 (右倾/向左移) -> scaleY > 1 (伸长)
-    lanternTargetScaleY = 1 + (relativeGamma / 30);
-    lanternTargetScaleY = Math.max(0.85, Math.min(1.15, lanternTargetScaleY));
-}
-
-// 启动马灯动画循环
-function startLanternAnimation() {
-    const lantern = document.getElementById('hand-lantern-6');
-    if (!lantern) return;
-
-    function animateLantern() {
-        if (!gyroActive && pathCompleted) return;
-
-        // 缓动插值
-        lanternCurrentX += (lanternTargetX - lanternCurrentX) * LANTERN_EASE;
-        lanternCurrentScaleY += (lanternTargetScaleY - lanternCurrentScaleY) * LANTERN_EASE;
-
-        // 应用变换：水平移动 + 垂直形变
-        // 使用 right:0 定位，所以 translateX 正值向左，负值向右
-        lantern.style.transform = `translateX(${lanternCurrentX}px) scaleY(${lanternCurrentScaleY})`;
-
-        lanternAnimFrame = requestAnimationFrame(animateLantern);
-    }
-
-    lanternAnimFrame = requestAnimationFrame(animateLantern);
 }
 
 // 处理左侧错误道路
@@ -197,12 +142,6 @@ function handleRightPath() {
     pathCompleted = true;
     gyroActive = false;
     window.removeEventListener('deviceorientation', handleOrientation);
-
-    // 停止马灯动画
-    if (lanternAnimFrame) cancelAnimationFrame(lanternAnimFrame);
-
-    // 隐藏马灯（只在6-1/6-2/6-3显示）
-    document.getElementById('hand-lantern-6').classList.remove('show');
 
     // 6-2.png 显现后自动显现 6-4.png
     setTimeout(() => {

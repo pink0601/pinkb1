@@ -5,7 +5,7 @@ const PROGRESS_KEY = 'lantern_story_progress';
 function getDefaultProgress() {
     return {
         currentScene: 1,
-        interactStatus: [false, false, false, false, false, false, false, false],
+        interactStatus: [false, false, false, false, false, false, false, false, false],
         finishedScene: []
     };
 }
@@ -37,7 +37,7 @@ function completeScene(sceneNum) {
     progressState.interactStatus[sceneNum - 1] = true;
 
     // 自动推进到下一幕
-    if (sceneNum < 8 && progressState.currentScene === sceneNum) {
+    if (sceneNum < 9 && progressState.currentScene === sceneNum) {
         progressState.currentScene = sceneNum + 1;
     }
 

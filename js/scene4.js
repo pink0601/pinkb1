@@ -6,7 +6,7 @@ let dragProgress4 = 0;
 let currentPhase4 = 1;
 let scene4Completed = false;
 const DRAG_THRESHOLD4 = 200; // 滑动距离阈值（像素）
-const DAMPING = 0.35; // 阻尼系数 - 模拟沉重阻力（值越小阻力越大）
+const DAMPING = 0.45; // 阻尼系数 - 模拟沉重阻力（值越小阻力越大）
 
 function initScene4() {
     if (scene4Initialized) return;

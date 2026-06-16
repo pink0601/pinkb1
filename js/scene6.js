@@ -62,6 +62,9 @@ function startGyroListener() {
         updateStatusText('左右倾斜手机探寻前路');
     }, 2500);
 
+    // 显示马灯
+    document.getElementById('hand-lantern-6').classList.add('show');
+
     // 启动马灯动画循环
     startLanternAnimation();
 }
@@ -197,6 +200,9 @@ function handleRightPath() {
 
     // 停止马灯动画
     if (lanternAnimFrame) cancelAnimationFrame(lanternAnimFrame);
+
+    // 隐藏马灯（只在6-1/6-2/6-3显示）
+    document.getElementById('hand-lantern-6').classList.remove('show');
 
     // 6-2.png 显现后自动显现 6-4.png
     setTimeout(() => {

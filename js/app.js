@@ -139,9 +139,6 @@ function switchToScene(num) {
     if (num === 8) {
         initScene8();
     }
-    if (num === 9) {
-        initScene9();
-    }
 }
 
 // 回看模式：显示各幕完成态
@@ -226,7 +223,7 @@ function enableGlobalSwipe() {
 }
 
 function goToNextScene() {
-    if (currentScene < 9) {
+    if (currentScene < 8) {
         // 上滑切换到下一幕
         switchToScene(currentScene + 1);
     } else {
@@ -253,7 +250,6 @@ window.addEventListener('load', () => {
     scene6Initialized = false;
     scene7Initialized = false;
     scene8Initialized = false;
-    scene9Initialized = false;
 
     // 隐藏所有场景，只显示第一幕
     document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));

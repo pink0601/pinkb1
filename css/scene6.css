@@ -183,7 +183,7 @@
     text-align: center;
 }
 
-/* 手部马灯联动单元 */
+/* 手部马灯联动单元 - 只在6-1/6-2/6-3背景时显示 */
 .hand-lantern-6 {
     position: absolute;
     bottom: 50%; right: 0;
@@ -191,10 +191,16 @@
     z-index: 20;
     will-change: transform;
     pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.hand-lantern-6.show {
+    opacity: 1;
 }
 
 .hand-lantern-img-6 {
-    width: 280px; height: auto;
+    width: 12.5vw; height: auto;
     filter: drop-shadow(0 0 20px rgba(255, 180, 80, 0.3));
     transition: filter 0.3s ease;
     transform-origin: bottom center;

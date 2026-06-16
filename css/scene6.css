@@ -183,6 +183,23 @@
     text-align: center;
 }
 
+/* 手部马灯联动单元 */
+.hand-lantern-6 {
+    position: absolute;
+    bottom: 50%; right: 0;
+    transform: translateX(0);
+    z-index: 20;
+    will-change: transform;
+    pointer-events: none;
+}
+
+.hand-lantern-img-6 {
+    width: 280px; height: auto;
+    filter: drop-shadow(0 0 20px rgba(255, 180, 80, 0.3));
+    transition: filter 0.3s ease;
+    transform-origin: bottom center;
+}
+
 /* 错误锁定提示 */
 #lock-hint {
     position: absolute; top: 35%; left: 50%;

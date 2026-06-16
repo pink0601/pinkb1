@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>提灯寻路</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            width: 100%; height: 100%;
+            overflow: hidden;
+            background: #0a0a12;
+            font-family: "PingFang SC", "Microsoft YaHei", "Songti SC", "SimSun", serif;
+        }
+
+        /* 场景容器 */
+        .scene {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            overflow: hidden;
+        }
+
+        /* 背景：6-1.png */
+        .bg-image {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('assets/images/6-1.png') center/cover no-repeat;
+            z-index: 1;
+        }
+
+        /* 光斑层：暖黄色光晕，随马灯同步移动 */
+        .light-spot {
+            position: absolute;
+            width: 220px; height: 220px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 200, 100, 0.3) 0%, rgba(255, 180, 80, 0.12) 40%, transparent 70%);
+            filter: blur(25px);
+            z-index: 2;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .light-spot.active { opacity: 1; }
+
+        /* 手部马灯联动单元 */
+        .hand-lantern-unit {
+            position: absolute;
+            bottom: 50%; left: 0;
+            transform: translateX(0);
+            z-index: 10;
+            will-change: transform;
+        }
+
+        .hand-lantern-img {
+            width: 280px; height: auto;
+            filter: drop-shadow(0 0 20px rgba(255, 180, 80, 0.3));
+            transition: filter 0.3s ease;
+        }
+
+        /* 引导提示 */
+        .guide-hint {
+            position: absolute; bottom: 8%; left: 50%; transform: translateX(-50%);
+            color: rgba(220, 215, 200, 0.85); font-size: 16px; z-index: 20;
+            white-space: nowrap; opacity: 0;
+            font-weight: 500; letter-spacing: 1px;
+            text-shadow: 0 0 12px rgba(255, 200, 100, 0.3);
+            transition: opacity 0.8s ease;
+        }
+        .guide-hint.show { opacity: 1; animation: guidePulse 2.5s ease-in-out infinite; }
+
+        @keyframes guidePulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        /* 状态提示 */
+        .status-hint {
+            position: absolute; top: 12%; left: 50%; transform: translateX(-50%);
+            color: rgba(220, 215, 200, 0.9); font-size: 14px; z-index: 20;
+            white-space: nowrap; opacity: 0;
+            font-weight: 500; letter-spacing: 1px;
+            background: rgba(20, 22, 30, 0.8);
+            border: 1px solid rgba(180, 160, 120, 0.2);
+            border-radius: 20px;
+            padding: 10px 20px;
+            transition: all 0.5s ease;
+        }
+        .status-hint.show { opacity: 1; }
+        .status-hint.error {
+            border-color: rgba(200, 100, 100, 0.4);
+            background: rgba(40, 25, 25, 0.85);
+            color: rgba(255, 180, 180, 0.9);
+        }
+    </style>
+</head>
+<body>
+    <div class="scene">
+        <!-- 背景：6-1.png -->
+        <div class="bg-image"></div>
+
+        <!-- 光斑层：随马灯同步移动 -->
+        <div class="light-spot" id="lightSpot"></div>
+
+        <!-- 手部马灯联动单元：1111.png -->
+        <div class="hand-lantern-unit" id="handLantern">
+            <img src="assets/images/1111.png" alt="手部马灯" class="hand-lantern-img">
+        </div>
+
+        <!-- 引导提示 -->
+        <div class="guide-hint" id="guideHint">
+            左右倾斜手机，让马灯照亮前路
+        </div>
+
+        <!-- 状态提示 -->
+        <div class="status-hint" id="statusHint"></div>
+    </div>
+
+    <script>
+        // ==================== 陀螺仪控制手部马灯联动 ====================
+        let gyroActive = false;
+        let baseGamma = 0;
+
+        // 物理参数
+        const EASE_FACTOR = 0.08;      // 缓动系数（越小越平滑，惯性越强）
+        const MAX_OFFSET = 120;        // 最大左右偏移（像素）
+        const GAMMA_SENSITIVITY = 8;   // 陀螺仪灵敏度（度/像素）
+
+        // 当前状态
+        let currentX = 0;              // 当前X偏移
+        let targetX = 0;               // 目标X偏移
+        let animFrame = null;
+
+        // DOM 元素
+        const handLantern = document.getElementById('handLantern');
+        const lightSpot = document.getElementById('lightSpot');
+        const guideHint = document.getElementById('guideHint');
+        const statusHint = document.getElementById('statusHint');
+
+        // 初始化
+        function init() {
+            // 显示引导提示
+            setTimeout(() => {
+                guideHint.classList.add('show');
+            }, 500);
+
+            // 请求陀螺仪权限
+            requestGyroPermission();
+        }
+
+        // 请求陀螺仪权限
+        function requestGyroPermission() {
+            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+                DeviceOrientationEvent.requestPermission()
+                    .then(permissionState => {
+                        if (permissionState === 'granted') {
+                            startGyroListener();
+                        } else {
+                            showStatus('需要陀螺仪权限', true);
+                        }
+                    })
+                    .catch(() => showStatus('陀螺仪权限请求失败', true));
+            } else {
+                startGyroListener();
+            }
+        }
+
+        // 启动陀螺仪监听
+        function startGyroListener() {
+            gyroActive = true;
+
+            // 校准基准角度
+            window.addEventListener('deviceorientation', calibrateGyro, { once: true });
+
+            // 持续监听
+            window.addEventListener('deviceorientation', handleGyro);
+
+            // 隐藏引导，显示状态
+            setTimeout(() => {
+                guideHint.classList.remove('show');
+                showStatus('左右倾斜手机，让马灯照亮前路');
+            }, 2500);
+
+            // 启动动画循环
+            startAnimationLoop();
+        }
+
+        // 校准初始方向
+        function calibrateGyro(event) {
+            baseGamma = event.gamma || 0;
+        }
+
+        // 处理方向变化
+        function handleGyro(event) {
+            if (!gyroActive) return;
+
+            const gamma = event.gamma || 0;
+            const relativeGamma = gamma - baseGamma;
+
+            // 计算目标偏移（带灵敏度调节）
+            targetX = relativeGamma * GAMMA_SENSITIVITY;
+
+            // 限制边界
+            targetX = Math.max(-MAX_OFFSET, Math.min(MAX_OFFSET, targetX));
+
+            // 更新状态文字
+            updateStatusDirection(relativeGamma);
+        }
+
+        // 更新状态方向文字
+        function updateStatusDirection(gamma) {
+            if (!statusHint.classList.contains('show')) return;
+
+            if (gamma < -5) {
+                statusHint.textContent = '马灯向左照亮';
+            } else if (gamma > 5) {
+                statusHint.textContent = '马灯向右照亮';
+            } else {
+                statusHint.textContent = '马灯照亮前方';
+            }
+        }
+
+        // 启动动画循环（缓动物理效果）
+        function startAnimationLoop() {
+            function animate() {
+                if (!gyroActive) return;
+
+                // 缓动插值：当前值向目标值平滑过渡
+                currentX += (targetX - currentX) * EASE_FACTOR;
+
+                // 应用变换（手部马灯联动单元整体移动）
+                handLantern.style.transform = `translateX(${currentX}px)`;
+
+                // 光斑同步移动（相对马灯位置）
+                const spotX = 50 + (currentX / window.innerWidth) * 30;
+                lightSpot.style.left = `${spotX}%`;
+                lightSpot.style.transform = 'translateX(-50%)';
+
+                animFrame = requestAnimationFrame(animate);
+            }
+
+            // 激活光斑
+            lightSpot.classList.add('active');
+            animFrame = requestAnimationFrame(animate);
+        }
+
+        // 显示状态提示
+        function showStatus(text, isError) {
+            statusHint.textContent = text;
+            statusHint.classList.add('show');
+            if (isError) {
+                statusHint.classList.add('error');
+            } else {
+                statusHint.classList.remove('error');
+            }
+        }
+
+        // 页面加载后初始化
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>

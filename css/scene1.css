@@ -1,110 +1,75 @@
-// 第一幕 - 长按交互
-let scene1Progress = 0;
-let scene1AnimFrame = null;
-let scene1StartTime = 0;
-const scene1RequiredTime = 1500; // 长按所需时间 1.5秒
+#scene1 {
+    background: url("../assets/images/1.png") center center / cover no-repeat;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    transition: opacity 0.5s ease, background 1.5s ease;
+}
+#scene1.lit-up { background: url("../assets/images/2.png") center center / cover no-repeat; }
 
-function initScene1() {
-    // 重置第一幕所有状态
-    scene1Progress = 0;
-    scene1StartTime = 0;
-    if (scene1AnimFrame) cancelAnimationFrame(scene1AnimFrame);
-    
-    const scene1 = document.getElementById('scene1');
-    scene1.classList.remove('lit-up');
-    setTimeout(() => scene1.classList.add('active'), 100);
-    
-    const hitArea = document.getElementById('hit-area');
-    hitArea.classList.remove('active');
-    
-    const progressBar = document.getElementById('progress-bar');
-    progressBar.style.width = '0%';
-    progressBar.style.boxShadow = '0 0 0px rgba(255, 180, 100, 0)';
-    
-    const progressContainer = document.getElementById('progress-container');
-    progressContainer.style.display = 'block';
-    progressContainer.style.opacity = '0';
-    
-    const hintText = document.querySelector('#scene1 .hint-text');
-    hintText.style.display = 'block';
-    
-    document.getElementById('swipe-1').classList.remove('show');
-    swipeEnabled = false;
-    
-    // 恢复马灯呼吸动画
-    const lanternCore = document.querySelector('.lantern-core');
-    if (lanternCore) lanternCore.style.animationPlayState = 'running';
-    
-    function startPress(e) {
-        e.preventDefault();
-        // 首次交互时播放 BGM2（浏览器限制需要用户交互）
-        if (bgm2Audio && bgm2Audio.paused) {
-            playBGM(bgm2Audio);
-        }
-        scene1StartTime = Date.now();
-        progressContainer.style.opacity = '1';
-        // 停止马灯呼吸动画
-        const lanternCore = document.querySelector('.lantern-core');
-        if (lanternCore) lanternCore.style.animationPlayState = 'paused';
-        updateScene1Progress();
-    }
-    
-    function endPress(e) {
-        e.preventDefault();
-        cancelAnimationFrame(scene1AnimFrame);
-        if (scene1Progress < 100) {
-            progressContainer.style.opacity = '0';
-            progressBar.style.width = '0%';
-            progressBar.style.boxShadow = '0 0 0px rgba(255, 180, 100, 0)';
-            scene1Progress = 0;
-            // 恢复马灯呼吸动画
-            const lanternCore = document.querySelector('.lantern-core');
-            if (lanternCore) lanternCore.style.animationPlayState = 'running';
-        }
-    }
-    
-    function updateScene1Progress() {
-        const elapsed = Date.now() - scene1StartTime;
-        scene1Progress = Math.min((elapsed / scene1RequiredTime) * 100, 100);
-        
-        // 更新进度条
-        progressBar.style.width = scene1Progress + '%';
-        
-        // 同步更新box-shadow光晕扩散效果
-        const shadowIntensity = scene1Progress / 100;
-        const glowRadius = 5 + (shadowIntensity * 25); // 5px -> 30px
-        const glowOpacity = 0.1 + (shadowIntensity * 0.5); // 0.1 -> 0.6
-        progressBar.style.boxShadow = `0 0 ${glowRadius}px rgba(255, 180, 100, ${glowOpacity})`;
-        
-        if (scene1Progress < 100) {
-            scene1AnimFrame = requestAnimationFrame(updateScene1Progress);
-        } else {
-            triggerScene1Complete();
-        }
-    }
-    
-    function triggerScene1Complete() {
-        hitArea.classList.add('active');
-        document.getElementById('scene1').classList.add('lit-up');
-        hintText.style.display = 'none';
-        progressContainer.style.display = 'none';
+#scene1 .text-content {
+    position: relative; z-index: 20; text-align: center; margin-top: -15vh;
+    transition: color 1.5s ease;
+    pointer-events: none;
+}
+#scene1 .main-title {
+    font-size: 28px; font-weight: bold; letter-spacing: 4px; margin-bottom: 18px;
+    color: rgba(240, 235, 220, 0.95);
+    text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+}
+#scene1 .sub-title {
+    font-size: 16px; font-weight: normal; letter-spacing: 3px;
+    color: rgba(200, 195, 180, 0.8);
+    transition: color 1.5s ease;
+}
 
-        // 标记第一幕完成
-        completeScene(1);
+#hit-area {
+    position: absolute; left: 25%; top: 53%; transform: translate(-50%, -50%);
+    width: 200px; height: 200px; z-index: 25; cursor: pointer;
+    pointer-events: auto;
+}
 
-        // 长按完成后，显示上滑提示，等待用户上滑进入第二幕
-        setTimeout(() => {
-            document.getElementById('swipe-1').classList.add('show');
-            swipeEnabled = true;
-        }, 800);
-    }
-    
-    // 监听 touchstart 长按触摸事件
-    hitArea.addEventListener('touchstart', startPress, {passive: false});
-    hitArea.addEventListener('touchend', endPress);
-    hitArea.addEventListener('touchcancel', endPress);
-    // 同时支持PC端鼠标操作
-    hitArea.addEventListener('mousedown', startPress);
-    hitArea.addEventListener('mouseup', endPress);
-    hitArea.addEventListener('mouseleave', endPress);
+/* 长按位置呼吸灯提示 */
+#hit-area::before {
+    content: ''; position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70px; height: 70px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 200, 100, 0.4) 0%, rgba(255, 180, 80, 0.25) 50%, transparent 70%);
+    animation: hintBreath 2s ease-in-out infinite;
+    pointer-events: none;
+}
+@keyframes hintBreath {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.4; }
+    50% { transform: translate(-50%, -50%) scale(1.5); opacity: 0.8; }
+}
+
+.glow-effect {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 10px; height: 10px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 200, 100, 0.8) 0%, rgba(255, 150, 50, 0) 70%);
+    opacity: 0; pointer-events: none; z-index: 9;
+    transition: all 1.5s ease-out;
+}
+#hit-area.active .glow-effect { width: 800px; height: 800px; opacity: 0.6; }
+
+#scene1 .bottom-area {
+    position: absolute; bottom: 8%; width: 100%; text-align: center; z-index: 20;
+    pointer-events: none;
+}
+#scene1 .hint-text {
+    font-size: 16px; color: rgba(220, 215, 200, 0.8); margin-bottom: 12px; letter-spacing: 1px;
+    animation: pulse-hint 2.5s ease-in-out infinite;
+    font-weight: 500;
+    text-shadow: 0 0 12px rgba(255, 200, 100, 0.3);
+}
+@keyframes pulse-hint { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+#progress-container {
+    width: 140px; height: 3px; background: rgba(255,255,255,0.1);
+    margin: 0 auto; border-radius: 2px; overflow: hidden; opacity: 0;
+    transition: opacity 0.3s;
+}
+#progress-bar {
+    width: 0%; height: 100%; background: linear-gradient(90deg, #ffaa55, #ffcc77);
+    box-shadow: 0 0 8px rgba(255, 170, 85, 0.6);
+    transition: width 0.1s linear;
 }

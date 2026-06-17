@@ -37,6 +37,10 @@ function initScene1() {
     
     function startPress(e) {
         e.preventDefault();
+        // 首次交互时播放 BGM2（浏览器限制需要用户交互）
+        if (bgm2Audio && bgm2Audio.paused) {
+            playBGM(bgm2Audio);
+        }
         scene1StartTime = Date.now();
         progressContainer.style.opacity = '1';
         // 停止马灯呼吸动画

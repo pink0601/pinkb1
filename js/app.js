@@ -2,104 +2,89 @@
 let currentScene = 1;
 let swipeEnabled = false;
 let bgmAudio = null;
+let bgm2Audio = null;
 
 // 背景音乐控制
 let bgmFadeInterval = null;
+let bgm2FadeInterval = null;
 
 function initBGM() {
     bgmAudio = document.getElementById('bgm');
+    bgm2Audio = document.getElementById('bgm2');
 }
 
-function fadeInBGM(duration, targetVolume) {
-    if (!bgmAudio) return;
-    clearInterval(bgmFadeInterval);
-    bgmAudio.volume = 0;
-    bgmAudio.play().catch(() => {});
+function fadeInBGM(audio, duration, targetVolume) {
+    if (!audio) return;
+    const interval = audio === bgm2Audio ? bgm2FadeInterval : bgmFadeInterval;
+    clearInterval(interval);
+    audio.volume = 0;
+    audio.play().catch(() => {});
     const steps = 30;
     const stepTime = duration / steps;
     const volumeStep = targetVolume / steps;
     let current = 0;
-    bgmFadeInterval = setInterval(() => {
+    const newInterval = setInterval(() => {
         current += volumeStep;
         if (current >= targetVolume) {
-            bgmAudio.volume = targetVolume;
-            clearInterval(bgmFadeInterval);
+            audio.volume = targetVolume;
+            clearInterval(newInterval);
         } else {
-            bgmAudio.volume = current;
+            audio.volume = current;
         }
     }, stepTime);
+    if (audio === bgm2Audio) bgm2FadeInterval = newInterval;
+    else bgmFadeInterval = newInterval;
 }
 
-function fadeOutBGM(duration) {
-    if (!bgmAudio) return;
-    clearInterval(bgmFadeInterval);
-    const startVolume = bgmAudio.volume;
-    if (startVolume <= 0) { bgmAudio.pause(); bgmAudio.currentTime = 0; return; }
+function fadeOutBGM(audio, duration) {
+    if (!audio) return;
+    const interval = audio === bgm2Audio ? bgm2FadeInterval : bgmFadeInterval;
+    clearInterval(interval);
+    const startVolume = audio.volume;
+    if (startVolume <= 0) { audio.pause(); audio.currentTime = 0; return; }
     const steps = 30;
     const stepTime = duration / steps;
     const volumeStep = startVolume / steps;
     let current = startVolume;
-    bgmFadeInterval = setInterval(() => {
+    const newInterval = setInterval(() => {
         current -= volumeStep;
         if (current <= 0) {
-            bgmAudio.volume = 0;
-            bgmAudio.pause();
-            bgmAudio.currentTime = 0;
-            clearInterval(bgmFadeInterval);
+            audio.volume = 0;
+            audio.pause();
+            audio.currentTime = 0;
+            clearInterval(newInterval);
         } else {
-            bgmAudio.volume = current;
+            audio.volume = current;
         }
     }, stepTime);
+    if (audio === bgm2Audio) bgm2FadeInterval = newInterval;
+    else bgmFadeInterval = newInterval;
 }
 
-function playBGM() {
-    if (bgmAudio && bgmAudio.paused) {
-        fadeInBGM(1500, 1);
+function playBGM(audio) {
+    const target = audio || bgmAudio;
+    if (target && target.paused) {
+        fadeInBGM(target, 1500, 1);
     }
 }
 
-function stopBGM() {
-    if (bgmAudio && !bgmAudio.paused) {
-        fadeOutBGM(1500);
+function stopBGM(audio) {
+    const target = audio || bgmAudio;
+    if (target && !target.paused) {
+        fadeOutBGM(target, 1500);
     }
-}
-
-// 背景音乐逐渐降低（不暂停，持续播放但音量渐小）
-function fadeBGMDown(duration, targetVolume) {
-    if (!bgmAudio || bgmAudio.paused) return;
-    clearInterval(bgmFadeInterval);
-    const startVolume = bgmAudio.volume;
-    if (startVolume <= targetVolume) return;
-    const steps = 40;
-    const stepTime = duration / steps;
-    const volumeStep = (startVolume - targetVolume) / steps;
-    let current = startVolume;
-    bgmFadeInterval = setInterval(() => {
-        current -= volumeStep;
-        if (current <= targetVolume) {
-            bgmAudio.volume = targetVolume;
-            clearInterval(bgmFadeInterval);
-        } else {
-            bgmAudio.volume = current;
-        }
-    }, stepTime);
 }
 
 function updateBGM(sceneNum) {
-    // 第二幕到第三幕播放 BGM
+    // 原bgm：第二幕到第三幕播放
     if (sceneNum === 2 || sceneNum === 3) {
         if (bgmAudio && bgmAudio.paused) {
-            playBGM();
+            playBGM(bgmAudio);
         }
     }
-    // 第四幕：不重新播放，让第三幕的渐低音量自然衔接
-    // 离开第四幕（进入第五幕）时淡出
-    if (sceneNum === 5) {
-        stopBGM();
-    }
-    // 第一幕和第八幕停止
-    if (sceneNum === 1 || sceneNum === 8) {
-        stopBGM();
+    // 红军主题bgm2：贯穿每一幕
+    if (bgm2Audio && bgm2Audio.paused) {
+        playBGM(bgm2Audio);
     }
 }
 
@@ -255,4 +240,7 @@ window.addEventListener('load', () => {
     document.querySelectorAll('.scene').forEach(s => s.classList.remove('active'));
 
     initScene1();
+
+    // 从第一幕开始播放红军主题 BGM2
+    setTimeout(() => playBGM(bgm2Audio), 500);
 });

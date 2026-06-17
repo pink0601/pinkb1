@@ -241,6 +241,6 @@ window.addEventListener('load', () => {
 
     initScene1();
 
-    // 从第一幕开始播放红军主题 BGM2
-    setTimeout(() => playBGM(bgm2Audio), 500);
+    // 页面加载后立即播放 BGM2
+    playBGM(bgm2Audio);
 });

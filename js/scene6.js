@@ -79,11 +79,16 @@ function handleGamma(gamma) {
         setState("center");
     }
 
-    // 手部运动
-    let mapped = gamma / ANGLE_LIMIT;
-    if (mapped > 1) mapped = 1;
-    if (mapped < -1) mapped = -1;
-    targetX = mapped * MOVE_LIMIT;
+    // 手部运动 - 始终紧贴左边界
+    // gamma < 0 (左倾): targetX = 0 (紧贴左边)
+    // gamma > 0 (右倾): targetX 向右移动
+    if (gamma <= 0) {
+        targetX = 0; // 左倾或水平时紧贴左边框
+    } else {
+        let mapped = gamma / ANGLE_LIMIT;
+        if (mapped > 1) mapped = 1;
+        targetX = mapped * MOVE_LIMIT;
+    }
 }
 
 // 陀螺仪

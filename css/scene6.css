@@ -64,7 +64,7 @@
 #lantern-6 {
     position: absolute;
     bottom: 25vh;
-    left: 5vh;
+    left: 15vh;
     transform: translateX(-50%);
     will-change: transform;
     z-index: 50;
@@ -72,7 +72,7 @@
 }
 
 .lantern-img-6 {
-    width: 12.5vw;
+    width: 75vw;
     height: auto;
     filter: drop-shadow(0 0 20px rgba(255, 180, 80, 0.3));
 }

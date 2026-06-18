@@ -5,14 +5,13 @@ let scene6Initialized = false;
 const bg1 = document.getElementById("bg1");
 const bg2 = document.getElementById("bg2");
 const bg3 = document.getElementById("bg3");
+const bg4 = document.getElementById("bg4");
 const lantern = document.getElementById("lantern-6");
 const tip = document.getElementById("tip-6");
 
 // 参数（核心调参区）
 const THRESHOLD = 20;      // 背景切换阈值
 const MAX_ANGLE = 60;      // 最大识别角度
-const MOVE_LIMIT = 40;     // 手的最大移动范围（减小）
-const ANGLE_LIMIT = 45;    // 响应压缩角度
 const EASE = 0.05;         // 缓动系数（越小阻力越大）
 
 // 状态
@@ -44,11 +43,13 @@ function setState(newState) {
         bg1.style.opacity = 0;
         bg2.style.opacity = 1;
         bg3.style.opacity = 0;
+        bg4.style.opacity = 0;
         tip.innerText = "左侧探路中…";
     } else if (state === "right") {
         bg1.style.opacity = 0;
         bg2.style.opacity = 0;
         bg3.style.opacity = 1;
+        bg4.style.opacity = 0;
         tip.innerText = "右侧探路中…";
         // 右侧是正确道路，标记完成
         if (!pathCompleted) {
@@ -59,6 +60,7 @@ function setState(newState) {
         bg1.style.opacity = 1;
         bg2.style.opacity = 0;
         bg3.style.opacity = 0;
+        bg4.style.opacity = 0;
         tip.innerText = "保持手机平稳，探索前方";
     }
 }
@@ -79,14 +81,14 @@ function handleGamma(gamma) {
         setState("center");
     }
 
-    // 手部运动
+    // 手部运动 - 交互后保持原位
     // gamma < 0 (左倾): 溢出左边界 20px
     // gamma = 0 (水平): 溢出左边界 10px
     // gamma > 0 (右倾): 原位
     if (gamma < 0) {
-        targetX = -35; // 左倾时溢出左边界 20px
+        targetX = -20; // 左倾时溢出左边界 20px
     } else if (gamma === 0) {
-        targetX = -20; // 水平时溢出左边界 10px
+        targetX = -10; // 水平时溢出左边界 10px
     } else {
         targetX = 0; // 右倾时原位
     }
@@ -142,31 +144,23 @@ function completeScene6() {
     // 标记完成
     completeScene(6);
 
-    // 隐藏前半部分元素
-    if (lantern) lantern.style.opacity = '0';
+    // 隐藏提示
     if (tip) tip.style.opacity = '0';
 
-    // 后半部分：自动播放 6-4 6-5 6-6
-    setTimeout(() => {
-        document.getElementById('bg-6-seq1').style.opacity = '1';
-    }, 500);
-
-    setTimeout(() => {
-        document.getElementById('bg-6-seq2').style.opacity = '1';
-    }, 2000);
-
-    setTimeout(() => {
-        document.getElementById('bg-6-seq3').style.opacity = '1';
-    }, 3500);
+    // 切换到第四张背景
+    bg1.style.opacity = 0;
+    bg2.style.opacity = 0;
+    bg3.style.opacity = 0;
+    bg4.style.opacity = 1;
 
     // 显示台词弹窗
     setTimeout(() => {
         document.getElementById('dialogue-box-6').classList.add('show');
-    }, 4500);
+    }, 1500);
 
     // 显示上滑提示
     setTimeout(() => {
         document.getElementById('swipe-6').classList.add('show');
         swipeEnabled = true;
-    }, 6000);
+    }, 3000);
 }

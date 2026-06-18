@@ -1,217 +1,145 @@
-// 第六幕：陀螺仪寻路（纯画面光影层次，无图形元素）
+// 第六幕：陀螺仪寻路
 let scene6Initialized = false;
-let gyroActive = false;
-let currentDirection = 'center'; // 'left', 'right', 'center'
-let isLocked = false; // 左侧错误锁定状态
+
+// DOM
+const bg1 = document.getElementById("bg1");
+const bg2 = document.getElementById("bg2");
+const bg3 = document.getElementById("bg3");
+const lantern = document.getElementById("lantern-6");
+const tip = document.getElementById("tip-6");
+
+// 参数（核心调参区）
+const THRESHOLD = 20;      // 背景切换阈值
+const MAX_ANGLE = 60;      // 最大识别角度
+const MOVE_LIMIT = 80;     // 手的最大移动范围
+const ANGLE_LIMIT = 45;    // 响应压缩角度
+const EASE = 0.08;         // 缓动系数
+
+// 状态
+let state = "center";
+let targetX = 0;
+let currentX = 0;
 let pathCompleted = false;
-let baseGamma = 0;
 
 function initScene6() {
     if (scene6Initialized) return;
     scene6Initialized = true;
 
-    // 延迟显示引导
-    setTimeout(() => {
-        document.getElementById('gyro-guide').classList.add('show');
-        document.getElementById('gyro-status').classList.add('show');
-    }, 800);
+    // 初始化背景状态
+    setState("center");
 
-    // 请求陀螺仪权限
-    requestGyroPermission();
+    // 启动陀螺仪
+    initGyro();
+
+    // 启动动画循环
+    animate();
 }
 
-// 请求陀螺仪权限
-function requestGyroPermission() {
-    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-        DeviceOrientationEvent.requestPermission()
-            .then(permissionState => {
-                if (permissionState === 'granted') {
-                    startGyroListener();
-                } else {
-                    showGyroError('需要陀螺仪权限');
-                }
-            })
-            .catch(() => showGyroError('陀螺仪权限请求失败'));
+// 状态切换（背景）
+function setState(newState) {
+    if (state === newState) return;
+    state = newState;
+
+    if (state === "left") {
+        bg1.style.opacity = 0;
+        bg2.style.opacity = 1;
+        bg3.style.opacity = 0;
+        tip.innerText = "左侧探路中…";
+    } else if (state === "right") {
+        bg1.style.opacity = 0;
+        bg2.style.opacity = 0;
+        bg3.style.opacity = 1;
+        tip.innerText = "右侧探路中…";
+        // 右侧是正确道路，标记完成
+        if (!pathCompleted) {
+            pathCompleted = true;
+            setTimeout(completeScene6, 2000);
+        }
     } else {
-        startGyroListener();
+        bg1.style.opacity = 1;
+        bg2.style.opacity = 0;
+        bg3.style.opacity = 0;
+        tip.innerText = "保持手机平稳，探索前方";
     }
 }
 
-// 启动陀螺仪监听
-function startGyroListener() {
-    gyroActive = true;
+// 核心输入处理
+function handleGamma(gamma) {
+    if (pathCompleted) return;
 
-    // 校准基准角度
-    window.addEventListener('deviceorientation', calibrateOrientation, { once: true });
+    // 限制输入范围
+    gamma = Math.max(-MAX_ANGLE, Math.min(MAX_ANGLE, gamma));
 
-    // 持续监听
-    window.addEventListener('deviceorientation', handleOrientation);
+    // 背景状态
+    if (gamma < -THRESHOLD) {
+        setState("left");
+    } else if (gamma > THRESHOLD) {
+        setState("right");
+    } else {
+        setState("center");
+    }
 
-    // 隐藏引导，显示状态
-    setTimeout(() => {
-        document.getElementById('gyro-guide').classList.remove('show');
-        updateStatusText('左右倾斜手机探寻前路');
-    }, 2500);
+    // 手部运动
+    let mapped = gamma / ANGLE_LIMIT;
+    if (mapped > 1) mapped = 1;
+    if (mapped < -1) mapped = -1;
+    targetX = mapped * MOVE_LIMIT;
 }
 
-// 校准初始方向
-function calibrateOrientation(event) {
-    baseGamma = event.gamma || 0;
+// 陀螺仪
+function onGyro(e) {
+    if (!e.gamma && e.gamma !== 0) return;
+    handleGamma(e.gamma);
 }
 
-// 处理方向变化
-function handleOrientation(event) {
-    if (!gyroActive || pathCompleted) return;
+// PC模拟（鼠标）
+window.addEventListener("mousemove", (e) => {
+    const ratio = e.clientX / window.innerWidth;
+    const gamma = (ratio - 0.5) * 2 * MAX_ANGLE;
+    handleGamma(gamma);
+});
 
-    const gamma = event.gamma || 0;
-    const relativeGamma = gamma - baseGamma;
+// 动画循环（平滑移动）
+function animate() {
+    currentX += (targetX - currentX) * EASE;
 
-    // 判定阈值
-    const LEFT_THRESHOLD = -12;   // 向左倾斜12度触发左侧
-    const RIGHT_THRESHOLD = 12;   // 向右倾斜12度触发右侧
-    const CENTER_MIN = -8;        // 中间区域下限
-    const CENTER_MAX = 8;         // 中间区域上限
+    if (lantern) {
+        lantern.style.transform = `translateX(calc(-50% + ${currentX}px))`;
+    }
 
-    if (isLocked) {
-        // 锁定状态：只能回中解锁
-        if (relativeGamma >= CENTER_MIN && relativeGamma <= CENTER_MAX) {
-            if (currentDirection !== 'center') {
-                currentDirection = 'center';
-                handleCenterPath();
+    requestAnimationFrame(animate);
+}
+
+// iOS 陀螺仪权限
+function initGyro() {
+    if (
+        typeof DeviceOrientationEvent !== "undefined" &&
+        typeof DeviceOrientationEvent.requestPermission === "function"
+    ) {
+        document.body.addEventListener("touchstart", async () => {
+            try {
+                const res = await DeviceOrientationEvent.requestPermission();
+                if (res === "granted") {
+                    window.addEventListener("deviceorientation", onGyro, true);
+                }
+            } catch (err) {
+                console.log(err);
             }
-        }
-        return;
-    }
-
-    // 未锁定状态：正常方向判定
-    if (relativeGamma < LEFT_THRESHOLD) {
-        // 偏向左侧 - 错误道路
-        if (currentDirection !== 'left') {
-            currentDirection = 'left';
-            handleLeftPath();
-        }
-    } else if (relativeGamma > RIGHT_THRESHOLD) {
-        // 偏向右侧 - 正确道路
-        if (currentDirection !== 'right') {
-            currentDirection = 'right';
-            handleRightPath();
-        }
-    } else if (relativeGamma >= CENTER_MIN && relativeGamma <= CENTER_MAX) {
-        // 回到中间区域
-        if (currentDirection !== 'center') {
-            currentDirection = 'center';
-            handleCenterPath();
-        }
+        }, { once: true });
+    } else {
+        window.addEventListener("deviceorientation", onGyro, true);
     }
 }
 
-// 处理左侧错误道路
-function handleLeftPath() {
-    document.getElementById('gyro-status').classList.add('error');
-
-    // 隐藏初始背景 6-1.png，显示左侧背景 6-3.png
-    document.getElementById('bg-6-initial').style.opacity = '0';
-    document.getElementById('bg-6-left').style.opacity = '1';
-    document.getElementById('bg-6-right').style.opacity = '0';
-
-    // 叠加厚重迷雾强化昏暗视觉效果
-    document.getElementById('fog-left').classList.add('thicken');
-
-    // 中央迷雾也加重
-    document.getElementById('fog-center').style.opacity = '0.9';
-
-    // 锁定状态 - 必须回中才能解锁
-    isLocked = true;
-}
-
-// 处理右侧正确道路
-function handleRightPath() {
-    updateStatusText('发现道路！视野逐渐清晰');
-
-    // 显示右侧背景 6-2.png
-    document.getElementById('bg-6-right').style.opacity = '1';
-    document.getElementById('bg-6-left').style.opacity = '0';
-
-    // 解除右侧迷雾 - 呈现清晰通行视野
-    document.getElementById('fog-right').classList.add('clear');
-
-    // 如果左侧迷雾加厚过，恢复
-    document.getElementById('fog-left').classList.remove('thicken');
-
-    // 标记完成，停止监听
-    pathCompleted = true;
-    gyroActive = false;
-    window.removeEventListener('deviceorientation', handleOrientation);
-
-    // 6-2.png 显现后自动显现 6-4.png
-    setTimeout(() => {
-        document.getElementById('bg-6-seq1').style.opacity = '1';
-    }, 1500);
-
-    // 延迟后进入亮度渐亮流程
-    setTimeout(() => startBrightnessAnimation(), 2500);
-}
-
-// 处理中间位置（回退/重置）
-function handleCenterPath() {
-    document.getElementById('gyro-status').classList.remove('error');
-
-    // 从错误状态回中：显示 6-1.png，解除锁定
-    if (isLocked) {
-        isLocked = false;
-        document.getElementById('bg-6-initial').style.opacity = '1';
-        document.getElementById('bg-6-left').style.opacity = '0';
-        document.getElementById('bg-6-right').style.opacity = '0';
-    }
-
-    // 恢复迷雾状态
-    document.getElementById('fog-right').classList.remove('thicken');
-    document.getElementById('fog-center').style.opacity = '';
-}
-
-// 更新状态文字
-function updateStatusText(text) {
-    const statusEl = document.getElementById('gyro-status');
-    const textEl = statusEl.querySelector('.status-text');
-    if (textEl) textEl.textContent = text;
-}
-
-// 显示陀螺仪错误
-function showGyroError(message) {
-    updateStatusText(message);
-    document.getElementById('gyro-status').classList.add('error');
-}
-
-// 亮度渐亮动画 - 画面逐渐亮度提高
-function startBrightnessAnimation() {
-    // 隐藏状态提示
-    document.getElementById('gyro-status').classList.remove('show');
-
-    // 自动播放6-5.png
-    setTimeout(() => {
-        document.getElementById('bg-6-seq2').style.opacity = '1';
-    }, 800);
-
-    // 6-5.png 后再自动播放 6-6.png
-    setTimeout(() => {
-        document.getElementById('bg-6-seq3').style.opacity = '1';
-    }, 1200);
-
-    // 中央迷雾消散
-    setTimeout(() => {
-        document.getElementById('fog-center').style.opacity = '0';
-    }, 500);
-
-    // 标记第六幕完成
+// 完成第六幕
+function completeScene6() {
+    // 标记完成
     completeScene(6);
 
     // 显示台词弹窗
-    setTimeout(() => showDialogue6(), 2500);
-}
-
-// 显示台词弹窗
-function showDialogue6() {
     document.getElementById('dialogue-box-6').classList.add('show');
+
+    // 显示上滑提示
     setTimeout(() => {
         document.getElementById('swipe-6').classList.add('show');
         swipeEnabled = true;

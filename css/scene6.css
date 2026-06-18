@@ -92,7 +92,7 @@
     opacity: 0;
     pointer-events: none;
     transition: all 0.8s ease;
-    z-index: 70;
+    z-index: 120;
 }
 #dialogue-box-6.show { opacity: 1; pointer-events: auto; }
 

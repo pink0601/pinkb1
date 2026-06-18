@@ -1,150 +1,138 @@
-/* ==================== 第六幕：陀螺仪寻路 ==================== */
+/* ==================== 第四幕：托举马灯 ==================== */
+#scene4 { background: #0a0a12; overflow: hidden; }
 
-/* 前半部分背景层 */
-.bg-6 {
-    position: absolute;
-    inset: 0;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    transition: opacity .3s ease;
+#bg-container-4 {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
 }
 
-/* 三张背景图 */
-#bg1 {
-    background-image: url("../assets/images/6-1.png");
+.bg-image-4 {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background-size: cover; background-position: center; opacity: 0;
+    transition: opacity 0.8s ease;
+}
+#bg-4-1 { background-image: url('../assets/images/4-1.png'); opacity: 1; }
+#bg-4-2 { background-image: url('../assets/images/4-2.png'); }
+#bg-4-3 { background-image: url('../assets/images/4-3.png'); }
+#bg-4-4 { background-image: url('../assets/images/4-4.png'); }
+
+/* 零星细雨 - 承接第三幕 */
+#rain-container-4 {
+    position: absolute; top: -30%; left: -30%; width: 160%; height: 160%;
+    z-index: 5; pointer-events: none; overflow: hidden;
+    opacity: 0.4;
+    transition: opacity 1s ease;
+}
+#rain-container-4.cleared { opacity: 0; }
+
+.rain-drop-4 {
+    position: absolute; width: 1.5px;
+    background: linear-gradient(to bottom, transparent, rgba(174, 194, 224, 0.4));
+    border-radius: 1px;
+    animation: rainFall4 linear infinite;
+}
+@keyframes rainFall4 {
+    0% { transform: translateY(-100px) translateX(-20px); opacity: 0; }
+    10% { opacity: 0.4; }
+    90% { opacity: 0.4; }
+    100% { transform: translateY(100vh) translateX(50px); opacity: 0; }
+}
+
+/* 马灯拖拽交互区域 */
+#lantern-drag-area {
+    position: absolute; left: 50%; bottom: 28%;
+    transform: translateX(-50%);
+    width: 140px; height: 220px; z-index: 25; cursor: grab;
+    touch-action: none;
+}
+#lantern-drag-area:active { cursor: grabbing; }
+
+/* 马灯元素 - 初始下沉状态模拟负重疲惫 */
+#lantern-4 {
+    position: absolute; left: 50%; bottom: 0;
+    transform: translateX(-50%) translateY(10px);
+    width: 80px; height: 120px; z-index: 26;
+    transition: transform 0.08s linear;
+    /* 下沉呼吸动画 - 模拟负重 */
+    animation: lanternSway 2.5s ease-in-out infinite;
+}
+@keyframes lanternSway {
+    0%, 100% { transform: translateX(-50%) translateY(10px); }
+    50% { transform: translateX(-50%) translateY(6px); }
+}
+#lantern-4.lift {
+    animation: none;
+}
+
+/* 马灯核心光源 - 静态 */
+.lantern-core-4 {
+    position: absolute; top: 30%; left: 50%; transform: translateX(-50%);
+    width: 40px; height: 50px;
+    background: radial-gradient(ellipse at center,
+        rgba(255, 200, 100, 0.35) 0%, rgba(255, 180, 80, 0.2) 40%, transparent 70%);
+    border-radius: 50%;
+}
+
+/* 马灯光晕 - 拖拽时显示 */
+.lantern-glow-4 {
+    position: absolute; top: 20%; left: 50%; transform: translateX(-50%);
+    width: 80px; height: 100px;
+    background: radial-gradient(ellipse at center,
+        rgba(255, 200, 100, 0.6) 0%, rgba(255, 180, 80, 0.3) 30%, transparent 60%);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+#lantern-4.lift .lantern-glow-4 {
     opacity: 1;
 }
 
-#bg2 {
-    background-image: url("../assets/images/6-2.png");
-    opacity: 0;
+/* 竖向进度条 */
+#progress-container-4 {
+    position: absolute; right: 8%; top: 50%; transform: translateY(-50%);
+    width: 6px; height: 160px; z-index: 35; opacity: 0;
+    transition: opacity 0.5s ease;
+    background: rgba(80, 80, 90, 0.25);
+    border-radius: 3px;
+}
+#progress-container-4.show { opacity: 1; }
+
+#progress-fill-4 {
+    position: absolute; bottom: 0; left: 0;
+    width: 100%; height: 0%;
+    background: linear-gradient(to top, rgba(200, 180, 120, 0.7), rgba(255, 220, 150, 0.95));
+    border-radius: 3px;
+    transition: height 0.08s linear;
+    box-shadow: 0 0 8px rgba(255, 200, 100, 0.3);
 }
 
-#bg3 {
-    background-image: url("../assets/images/6-3.png");
-    opacity: 0;
-}
-
-/* 后半部分序列背景 */
-.bg-image-6 {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background-size: cover;
-    background-position: center;
-    opacity: 0;
-    transition: opacity 1.5s ease;
-    z-index: 2;
-}
-
-#bg-6-seq1 {
-    background-image: url("../assets/images/6-4.png");
-}
-
-#bg-6-seq2 {
-    background-image: url("../assets/images/6-5.png");
-}
-
-#bg-6-seq3 {
-    background-image: url("../assets/images/6-6.png");
-}
-
-/* 暗角 */
-#scene6::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle, rgba(0,0,0,0) 40%, rgba(0,0,0,0.7) 100%);
-    pointer-events: none;
-    z-index: 5;
-}
-
-/* 马灯 */
-#lantern-6 {
-    position: absolute;
-    bottom: 25vh;
-    left: 15vh;
-    transform: translateX(-50%);
-    will-change: transform;
-    z-index: 50;
-    pointer-events: none;
-}
-
-.lantern-img-6 {
-    width: 120px;
-    min-width: 120px;
-    height: auto;
-    filter: drop-shadow(0 0 20px rgba(255, 180, 80, 0.3));
-}
-
-/* 提示 */
-#tip-6 {
-    position: absolute;
-    bottom: 18px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: rgba(220, 215, 200, 0.85);
-    font-size: 14px;
-    background: rgba(20, 22, 30, 0.8);
-    border: 1px solid rgba(180, 160, 120, 0.2);
-    padding: 8px 16px;
-    border-radius: 20px;
-    z-index: 60;
-    white-space: nowrap;
-    font-weight: 500;
-    letter-spacing: 1px;
+/* 引导文案 */
+#guide-text-4 {
+    position: absolute; bottom: 8%; left: 50%; transform: translateX(-50%);
+    color: rgba(220, 215, 200, 0.85); font-size: 16px; z-index: 35;
+    white-space: nowrap; opacity: 0;
+    transition: opacity 0.5s ease;
+    font-weight: 500; letter-spacing: 1px;
     text-shadow: 0 0 12px rgba(255, 200, 100, 0.3);
 }
+#guide-text-4.show { opacity: 1; animation: breatheGuide 2.5s ease-in-out infinite; }
+@keyframes breatheGuide { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
 
 /* 台词弹窗 */
-#dialogue-box-6 {
-    position: absolute;
-    bottom: 18%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(20, 22, 30, 0.9);
-    border: 1px solid rgba(255, 215, 0, 0.2);
-    border-radius: 12px;
-    padding: 24px 32px;
-    max-width: 80%;
-    text-align: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: all 0.8s ease;
-    z-index: 70;
+#dialogue-box-4 {
+    position: absolute; bottom: 22%; left: 50%; transform: translateX(-50%) scale(0);
+    background: rgba(25, 28, 38, 0.92); border: 1px solid rgba(160, 150, 130, 0.25);
+    border-radius: 14px; padding: 16px 20px; max-width: 85%;
+    color: rgba(240, 235, 220, 0.95); font-size: 15px; line-height: 1.8;
+    z-index: 40; opacity: 0; backdrop-filter: blur(6px);
 }
-#dialogue-box-6.show { opacity: 1; pointer-events: auto; }
-
-.dialogue-text-6 {
-    color: rgba(240, 235, 220, 0.9);
-    font-size: 18px;
-    line-height: 1.8;
-    letter-spacing: 1px;
+#dialogue-box-4.show { animation: dialoguePop4 0.6s ease forwards; }
+@keyframes dialoguePop4 {
+    0% { opacity: 0; transform: translateX(-50%) scale(0.8); }
+    100% { opacity: 1; transform: translateX(-50%) scale(1); }
 }
-
-/* 上滑提示 */
-#swipe-6 {
-    position: absolute;
-    bottom: 5%;
-    left: 50%;
-    transform: translateX(-50%);
-    color: rgba(220, 215, 200, 0.85);
-    font-size: 15px;
-    z-index: 60;
-    white-space: nowrap;
-    opacity: 0;
-    display: none;
-    font-weight: 500;
-    letter-spacing: 1px;
-    text-shadow: 0 0 12px rgba(255, 200, 100, 0.3);
-}
-#swipe-6.show {
-    display: block;
-    animation: swipePulse6 2s ease-in-out infinite;
-}
-
-@keyframes swipePulse6 {
-    0%, 100% { opacity: 0.6; transform: translateX(-50%) translateY(0); }
-    50% { opacity: 1; transform: translateX(-50%) translateY(-6px); }
+#dialogue-box-4::before {
+    content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
+    border-width: 10px 10px 0; border-style: solid;
+    border-color: rgba(25, 28, 38, 0.92) transparent transparent;
 }

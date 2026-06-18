@@ -104,7 +104,7 @@ function animate() {
     currentX += (targetX - currentX) * EASE;
 
     if (lantern) {
-        lantern.style.transform = `translateX(calc(-50% + ${currentX}px))`;
+        lantern.style.transform = `translateX(${currentX}px)`;
     }
 
     requestAnimationFrame(animate);

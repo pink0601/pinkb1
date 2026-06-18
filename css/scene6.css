@@ -1,197 +1,149 @@
 /* ==================== 第六幕：陀螺仪寻路 ==================== */
-#scene6 { background: #050510; overflow: hidden; }
 
-/* 左右岔路背景层 */
-.bg-image-6 {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background-size: cover; background-position: center;
-    opacity: 0; transition: opacity 1.5s ease;
-}
-/* 初始显示 6-1.png */
-#bg-6-initial { background-image: url('../assets/images/6-1.png'); opacity: 1; }
-/* 向右倾斜显示 6-2.png */
-#bg-6-right { background-image: url('../assets/images/6-2.png'); }
-/* 向左倾斜显示 6-3.png */
-#bg-6-left { background-image: url('../assets/images/6-3.png'); }
-/* 路线确认后自动播放 6-4.png 6-5.png 6-6.png */
-#bg-6-seq1 { background-image: url('../assets/images/6-4.png'); }
-#bg-6-seq2 { background-image: url('../assets/images/6-5.png'); }
-#bg-6-seq3 { background-image: url('../assets/images/6-6.png'); }
-
-/* 多层迷雾遮罩 - 不同浓度 */
-#fog-left, #fog-right, #fog-center {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    pointer-events: none; transition: all 1.2s ease;
+/* 前半部分背景层 */
+.bg-6 {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: opacity .3s ease;
 }
 
-/* 左侧迷雾 - 初始较浓，正确选择后消散 */
-#fog-left {
-    background: radial-gradient(ellipse at 30% 50%,
-        rgba(20, 25, 40, 0.576) 0%,
-        rgba(15, 20, 35, 0.512) 30%,
-        rgba(25, 30, 45, 0.336) 60%,
-        transparent 85%);
-    z-index: 15;
-}
-#fog-left.clear {
-    opacity: 0;
-    transform: translateX(-20px);
-}
-
-/* 右侧迷雾 - 初始较浓，选择后加厚锁定 */
-#fog-right {
-    background: radial-gradient(ellipse at 70% 50%,
-        rgba(20, 25, 40, 0.576) 0%,
-        rgba(15, 20, 35, 0.512) 30%,
-        rgba(25, 30, 45, 0.336) 60%,
-        transparent 85%);
-    z-index: 15;
-}
-#fog-right.thicken {
-    background: radial-gradient(ellipse at 70% 50%,
-        rgba(10, 15, 25, 0.784) 0%,
-        rgba(8, 12, 22, 0.76) 25%,
-        rgba(15, 20, 35, 0.72) 55%,
-        rgba(20, 25, 40, 0.56) 80%);
+/* 三张背景图 */
+#bg1 {
+    background-image: url("../assets/images/6-1.png");
     opacity: 1;
 }
 
-/* 中央迷雾 - 基础遮罩 */
-#fog-center {
-    background: radial-gradient(ellipse at 50% 50%,
-        rgba(15, 20, 30, 0.48) 0%,
-        rgba(20, 25, 40, 0.336) 40%,
-        rgba(25, 30, 45, 0.2) 70%,
-        transparent 100%);
-    z-index: 14;
+#bg2 {
+    background-image: url("../assets/images/6-2.png");
+    opacity: 0;
 }
 
-/* 夜色蒙版已删除 */
-
-/* 方向指示器 */
-#direction-indicator {
-    position: absolute; top: 25%; left: 50%;
-    transform: translateX(-50%) translateY(-20px);
-    display: flex; flex-direction: column; align-items: center;
-    gap: 8px; z-index: 40;
+#bg3 {
+    background-image: url("../assets/images/6-3.png");
     opacity: 0;
-    transition: all 0.5s ease;
+}
+
+/* 后半部分序列背景 */
+.bg-image-6 {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 1.5s ease;
+    z-index: 2;
+}
+
+#bg-6-seq1 {
+    background-image: url("../assets/images/6-4.png");
+}
+
+#bg-6-seq2 {
+    background-image: url("../assets/images/6-5.png");
+}
+
+#bg-6-seq3 {
+    background-image: url("../assets/images/6-6.png");
+}
+
+/* 暗角 */
+#scene6::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, rgba(0,0,0,0) 40%, rgba(0,0,0,0.7) 100%);
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* 马灯 */
+#lantern-6 {
+    position: absolute;
+    bottom: 25vh;
+    left: 50%;
+    transform: translateX(-50%);
+    will-change: transform;
+    z-index: 50;
     pointer-events: none;
 }
-#direction-indicator.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-}
-.direction-arrow {
-    font-size: 36px; color: rgba(255, 200, 100, 0.8);
-    animation: arrowPulse 1.5s ease-in-out infinite;
-    text-shadow: 0 0 20px rgba(255, 180, 80, 0.5);
-}
-@keyframes arrowPulse {
-    0%, 100% { transform: translateX(0); opacity: 0.6; }
-    50% { transform: translateX(-10px); opacity: 1; }
-}
-.direction-text {
-    font-size: 14px; color: rgba(200, 190, 170, 0.7);
-    letter-spacing: 2px;
+
+.lantern-img-6 {
+    width: 12.5vw;
+    height: auto;
+    filter: drop-shadow(0 0 20px rgba(255, 180, 80, 0.3));
 }
 
-/* 状态提示 */
-#gyro-status {
-    position: absolute; top: 12%; left: 50%;
+/* 提示 */
+#tip-6 {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
     transform: translateX(-50%);
+    color: rgba(220, 215, 200, 0.85);
+    font-size: 14px;
     background: rgba(20, 22, 30, 0.8);
     border: 1px solid rgba(180, 160, 120, 0.2);
+    padding: 8px 16px;
     border-radius: 20px;
-    padding: 12px 24px;
-    z-index: 40;
-    opacity: 0;
-    transition: all 0.5s ease;
-}
-#gyro-status.show { opacity: 1; }
-#gyro-status.error {
-    border-color: rgba(200, 100, 100, 0.4);
-    background: rgba(40, 25, 25, 0.85);
-}
-.status-text {
-    color: rgba(240, 235, 220, 0.9);
-    font-size: 14px;
-    letter-spacing: 1px;
-}
-#gyro-status.error .status-text {
-    color: rgba(255, 180, 180, 0.9);
-}
-
-/* 引导提示 */
-#gyro-guide {
-    position: absolute; top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex; flex-direction: column; align-items: center;
-    gap: 16px; z-index: 45;
-    opacity: 0;
-    transition: opacity 0.8s ease;
-}
-#gyro-guide.show { opacity: 1; }
-.guide-icon {
-    font-size: 48px;
-    animation: phoneTilt 2s ease-in-out infinite;
-}
-@keyframes phoneTilt {
-    0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(-15deg); }
-    75% { transform: rotate(15deg); }
-}
-.guide-hint {
-    font-size: 16px;
-    color: rgba(220, 215, 200, 0.9);
-    text-align: center;
-    line-height: 1.6;
+    z-index: 60;
+    white-space: nowrap;
     font-weight: 500;
+    letter-spacing: 1px;
     text-shadow: 0 0 12px rgba(255, 200, 100, 0.3);
 }
 
 /* 台词弹窗 */
 #dialogue-box-6 {
-    position: absolute; bottom: 20%; left: 50%;
-    transform: translateX(-50%) scale(0.8);
-    background: rgba(20, 22, 30, 0.95);
-    border: 1px solid rgba(180, 160, 120, 0.3);
-    border-radius: 16px;
-    padding: 20px 28px;
-    max-width: 85%;
-    z-index: 50;
-    opacity: 0;
-    backdrop-filter: blur(8px);
-    transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-#dialogue-box-6.show {
-    opacity: 1;
-    transform: translateX(-50%) scale(1);
-}
-#dialogue-box-6::before {
-    content: ''; position: absolute; bottom: -10px; left: 50%;
+    position: absolute;
+    bottom: 18%;
+    left: 50%;
     transform: translateX(-50%);
-    border-width: 10px 10px 0;
-    border-style: solid;
-    border-color: rgba(20, 22, 30, 0.95) transparent transparent;
-}
-.dialogue-text-6 {
-    color: rgba(240, 235, 220, 0.95);
-    font-size: 15px;
-    line-height: 1.9;
-    letter-spacing: 1px;
+    background: rgba(20, 22, 30, 0.9);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    border-radius: 12px;
+    padding: 24px 32px;
+    max-width: 80%;
     text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.8s ease;
+    z-index: 70;
+}
+#dialogue-box-6.show { opacity: 1; pointer-events: auto; }
+
+.dialogue-text-6 {
+    color: rgba(240, 235, 220, 0.9);
+    font-size: 18px;
+    line-height: 1.8;
+    letter-spacing: 1px;
 }
 
-/* 错误锁定提示 */
-#lock-hint {
-    position: absolute; top: 35%; left: 50%;
+/* 上滑提示 */
+#swipe-6 {
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
     transform: translateX(-50%);
-    color: rgba(255, 150, 120, 0.8);
-    font-size: 13px;
-    letter-spacing: 1px;
+    color: rgba(220, 215, 200, 0.85);
+    font-size: 15px;
+    z-index: 60;
+    white-space: nowrap;
     opacity: 0;
-    transition: opacity 0.5s ease;
-    z-index: 40;
+    display: none;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-shadow: 0 0 12px rgba(255, 200, 100, 0.3);
 }
-#lock-hint.show { opacity: 1; }
+#swipe-6.show {
+    display: block;
+    animation: swipePulse6 2s ease-in-out infinite;
+}
+
+@keyframes swipePulse6 {
+    0%, 100% { opacity: 0.6; transform: translateX(-50%) translateY(0); }
+    50% { opacity: 1; transform: translateX(-50%) translateY(-6px); }
+}

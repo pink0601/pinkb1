@@ -84,9 +84,9 @@ function handleGamma(gamma) {
     // gamma = 0 (水平): 溢出左边界 10px
     // gamma > 0 (右倾): 原位
     if (gamma < 0) {
-        targetX = -20; // 左倾时溢出左边界 20px
+        targetX = -35; // 左倾时溢出左边界 20px
     } else if (gamma === 0) {
-        targetX = -10; // 水平时溢出左边界 10px
+        targetX = -20; // 水平时溢出左边界 10px
     } else {
         targetX = 0; // 右倾时原位
     }

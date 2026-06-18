@@ -37,10 +37,6 @@ function initScene1() {
     
     function startPress(e) {
         e.preventDefault();
-        // 首次交互时播放 BGM2（浏览器限制需要用户交互）
-        if (bgm2Audio && bgm2Audio.paused) {
-            playBGM(bgm2Audio);
-        }
         scene1StartTime = Date.now();
         progressContainer.style.opacity = '1';
         // 停止马灯呼吸动画
@@ -99,12 +95,25 @@ function initScene1() {
         }, 800);
     }
     
+    // 播放 BGM2 的函数（确保只播放一次）
+    function playBGM2Once() {
+        if (bgm2Audio && bgm2Audio.paused) {
+            playBGM(bgm2Audio);
+        }
+    }
+
     // 监听 touchstart 长按触摸事件
-    hitArea.addEventListener('touchstart', startPress, {passive: false});
+    hitArea.addEventListener('touchstart', function(e) {
+        playBGM2Once();
+        startPress(e);
+    }, {passive: false});
     hitArea.addEventListener('touchend', endPress);
     hitArea.addEventListener('touchcancel', endPress);
     // 同时支持PC端鼠标操作
-    hitArea.addEventListener('mousedown', startPress);
+    hitArea.addEventListener('mousedown', function(e) {
+        playBGM2Once();
+        startPress(e);
+    });
     hitArea.addEventListener('mouseup', endPress);
     hitArea.addEventListener('mouseleave', endPress);
 }

@@ -11,9 +11,9 @@ const tip = document.getElementById("tip-6");
 // 参数（核心调参区）
 const THRESHOLD = 20;      // 背景切换阈值
 const MAX_ANGLE = 60;      // 最大识别角度
-const MOVE_LIMIT = 80;     // 手的最大移动范围
+const MOVE_LIMIT = 40;     // 手的最大移动范围（减小）
 const ANGLE_LIMIT = 45;    // 响应压缩角度
-const EASE = 0.08;         // 缓动系数
+const EASE = 0.05;         // 缓动系数（越小阻力越大）
 
 // 状态
 let state = "center";

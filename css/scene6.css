@@ -72,7 +72,8 @@
 }
 
 .lantern-img-6 {
-    width: 75vw;
+    width: 120px;
+    min-width: 120px;
     height: auto;
     filter: drop-shadow(0 0 20px rgba(255, 180, 80, 0.3));
 }

@@ -136,12 +136,31 @@ function completeScene6() {
     // 标记完成
     completeScene(6);
 
+    // 隐藏前半部分元素
+    if (lantern) lantern.style.opacity = '0';
+    if (tip) tip.style.opacity = '0';
+
+    // 后半部分：自动播放 6-4 6-5 6-6
+    setTimeout(() => {
+        document.getElementById('bg-6-seq1').style.opacity = '1';
+    }, 500);
+
+    setTimeout(() => {
+        document.getElementById('bg-6-seq2').style.opacity = '1';
+    }, 2000);
+
+    setTimeout(() => {
+        document.getElementById('bg-6-seq3').style.opacity = '1';
+    }, 3500);
+
     // 显示台词弹窗
-    document.getElementById('dialogue-box-6').classList.add('show');
+    setTimeout(() => {
+        document.getElementById('dialogue-box-6').classList.add('show');
+    }, 4500);
 
     // 显示上滑提示
     setTimeout(() => {
         document.getElementById('swipe-6').classList.add('show');
         swipeEnabled = true;
-    }, 2000);
+    }, 6000);
 }

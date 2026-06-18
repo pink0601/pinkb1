@@ -64,7 +64,7 @@
 #lantern-6 {
     position: absolute;
     bottom: 25vh;
-    left: 50%;
+    left: 5vh;
     transform: translateX(-50%);
     will-change: transform;
     z-index: 50;

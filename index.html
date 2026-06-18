@@ -147,38 +147,18 @@
     
     <!-- 第六幕：陀螺仪寻路 -->
     <div id="scene6" class="scene">
-        <!-- 左右岔路背景层 -->
-        <!-- 初始显示 6-1.png -->
-        <div id="bg-6-initial" class="bg-image-6"></div>
-        <!-- 向左倾斜显示 6-3.png -->
-        <div id="bg-6-left" class="bg-image-6"></div>
-        <!-- 向右倾斜显示 6-2.png -->
-        <div id="bg-6-right" class="bg-image-6"></div>
-        <!-- 路线确认后自动播放 6-4.png 6-5.png 6-6.png -->
-        <div id="bg-6-seq1" class="bg-image-6"></div>
-        <div id="bg-6-seq2" class="bg-image-6"></div>
-        <div id="bg-6-seq3" class="bg-image-6"></div>
+        <!-- 背景层 -->
+        <div id="bg1" class="bg-6"></div>
+        <div id="bg2" class="bg-6"></div>
+        <div id="bg3" class="bg-6"></div>
 
-        <!-- 多层迷雾遮罩 - 左右不同浓度 -->
-        <div id="fog-left"></div>
-        <div id="fog-right"></div>
-        <div id="fog-center"></div>
-
-        <!-- 方向指示器 -->
-        <div id="direction-indicator">
-            <div class="direction-arrow">→</div>
-            <div class="direction-text">向右探寻</div>
+        <!-- 马灯 -->
+        <div id="lantern-6">
+            <img src="assets/images/1111.png" alt="马灯" class="lantern-img-6">
         </div>
 
-        <!-- 状态提示 -->
-        <div id="gyro-status">
-            <div class="status-text">左右倾斜手机探寻前路</div>
-        </div>
-
-        <!-- 引导提示 -->
-        <div id="gyro-guide">
-            <div class="guide-hint">左右倾斜手机寻找正确道路</div>
-        </div>
+        <!-- 提示 -->
+        <div id="tip-6">保持手机平稳，探索前方</div>
 
         <!-- 台词弹窗 -->
         <div id="dialogue-box-6">

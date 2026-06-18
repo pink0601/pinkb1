@@ -79,15 +79,15 @@ function handleGamma(gamma) {
         setState("center");
     }
 
-    // 手部运动 - 始终紧贴左边界
-    // gamma < 0 (左倾): targetX = 0 (紧贴左边)
-    // gamma > 0 (右倾): targetX 向右移动
-    if (gamma <= 0) {
-        targetX = 0; // 左倾或水平时紧贴左边框
+    // 手部运动
+    // gamma < 0 (左倾): 溢出左边界 10px
+    // gamma > 0 (右倾): 向右移动，最大 20px
+    if (gamma < 0) {
+        targetX = -10; // 左倾时溢出左边界 10px
     } else {
         let mapped = gamma / ANGLE_LIMIT;
         if (mapped > 1) mapped = 1;
-        targetX = mapped * MOVE_LIMIT;
+        targetX = mapped * 20; // 右倾时最大移动 20px
     }
 }
 

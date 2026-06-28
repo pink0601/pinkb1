@@ -178,7 +178,7 @@ function updateBGM(sceneNum) {
 
     if (bgm2Audio && bgm2Audio.paused) {
 
-        playBGM(bgm2Audio, 1);
+        playBGM(bgm2Audio, 0.5);
 
     }
 
@@ -378,5 +378,5 @@ window.addEventListener('load', () => {
 
     // 红军主题音乐全程播放
 
-    playBGM(bgm2Audio, 1);
+    playBGM(bgm2Audio, 0.5);
 });

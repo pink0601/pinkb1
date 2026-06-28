@@ -61,7 +61,7 @@ function setState(newState) {
         bg2.style.opacity = 0;
         bg3.style.opacity = 0;
         bg4.style.opacity = 0;
-        tip.innerText = "保持手机平稳，探索前方";
+        tip.innerText = "保持手机左右摆动，探索前方道路";
     }
 }
 
